@@ -2,11 +2,11 @@
 
 export class TextArmorizer {
   private dangerousChars = new Map([
+    ['&', '&amp;'],  // Process ampersand first to prevent double-encoding
     ['<', '&lt;'],
     ['>', '&gt;'],
     ['"', '&quot;'],
-    ["'", '&#x27;'],
-    ['&', '&amp;']
+    ["'", '&#x27;']
   ]);
 
   fortify(rawText: string | undefined | null): string {
@@ -72,13 +72,30 @@ export class PathScrubber {
   cleanupPath(dirtyPath: string): string {
     let cleaned = dirtyPath;
     
-    this.forbiddenSequences.forEach(badSeq => {
-      while (cleaned.includes(badSeq)) {
-        cleaned = cleaned.replace(badSeq, '');
-      }
-    });
+    // Decode URL-encoded sequences first
+    try {
+      cleaned = decodeURIComponent(cleaned);
+    } catch {
+      // If decoding fails, use original
+    }
     
+    // Remove forbidden sequences iteratively until no more found
+    let previousLength;
+    do {
+      previousLength = cleaned.length;
+      this.forbiddenSequences.forEach(badSeq => {
+        cleaned = cleaned.split(badSeq).join('');
+      });
+    } while (cleaned.length !== previousLength);
+    
+    // Normalize multiple slashes
     cleaned = cleaned.replace(/\/+/g, '/');
+    
+    // Ensure path doesn't go above root
+    if (cleaned.startsWith('/')) {
+      const segments = cleaned.split('/').filter(s => s.length > 0);
+      cleaned = '/' + segments.join('/');
+    }
     
     return cleaned;
   }

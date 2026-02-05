@@ -10,7 +10,6 @@ export function middleware(req: NextRequest) {
     'X-Content-Type-Options': 'nosniff',
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-    'X-XSS-Protection': '1; mode=block',
   };
 
   Object.entries(securityMeasures).forEach(([headerName, headerValue]) => {

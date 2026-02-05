@@ -10,6 +10,9 @@ const collectionIdentifier = process.env.WEBFLOW_COLLECTION_ID;
 const pathCleaner = new PathScrubber();
 const trafficControl = new RequestThrottler();
 
+// Configuration constants
+const EXTERNAL_API_TIMEOUT_MS = 12000;
+
 // Custom response structure validator
 type GalleryDataPayload = {
   items?: Array<{
@@ -71,7 +74,7 @@ export async function GET(req: NextRequest) {
         'Authorization': `Bearer ${authKey}`,
         'Accept': 'application/json',
       },
-      timeout: 12000,
+      timeout: EXTERNAL_API_TIMEOUT_MS,
     });
 
     // Validate what we received

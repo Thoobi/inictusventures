@@ -83,6 +83,7 @@ export default async function Gallery() {
                     alt={textProtector.fortify(image.alt || image.title) || "Gallery Image"}
                     fill
                     className="object-cover transition-transform duration-300 hover:scale-105"
+                    priority={index < 4}
                   />
                 </div>
               );
