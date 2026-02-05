@@ -66,6 +66,8 @@ export default function Footer() {
                 <Link
                   href={link.href}
                   className={`text-3xl font-semibold inline-block`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   {link.name}
                 </Link>

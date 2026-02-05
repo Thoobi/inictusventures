@@ -1,34 +1,28 @@
 import axios from "axios";
-import { WORKSPACE_TOKEN, BASE_URL } from "./constant";
+import { ErrorVault, PathScrubber } from "./security/guards";
 
+const errorHandler = new ErrorVault();
+const pathGuard = new PathScrubber();
+
+// Client talks to our server only, not external APIs
 export const baseInstance = axios.create({
-  baseURL: BASE_URL || "",
+  baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
-
-    Authorization: `Bearer ${WORKSPACE_TOKEN}`,
   },
+  timeout: 15000,
 });
 
 class ApiClient {
   async get<T>(endpoint: string): Promise<T> {
+    const safePath = pathGuard.cleanupPath(endpoint);
+    
     try {
-      const baseURL = baseInstance.defaults.baseURL;
-
-      if (!baseURL) {
-        throw new Error(
-          "BASE_URL is not configured. Set NEXT_PUBLIC_BASE_URL environment variable.",
-        );
-      }
-
-      const url = endpoint;
-
-      const response = await baseInstance.get<T>(url);
-      return response.data;
-    } catch (error) {
-      console.error("API Error:", error);
-      throw error;
+      const resp = await baseInstance.get<T>(safePath);
+      return resp.data;
+    } catch (err) {
+      throw errorHandler.hideInternalDetails(err);
     }
   }
 }

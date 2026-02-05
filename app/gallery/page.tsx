@@ -1,53 +1,48 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Image from "next/image";
 import { apiClient } from "@/apiclient";
-import { COLLECTION_ID, BASE_URL } from "@/constant";
+import { GALLERY_ENDPOINT } from "@/constant";
+import { TextArmorizer, UrlGuardian } from "@/security/guards";
 
 interface GalleryImage {
   id: string;
   title?: string;
-  image?: {
-    url: string;
-    fileId: string;
-    alt?: string;
-  }[];
-  [key: string]: any;
+  url: string;
+  alt?: string;
 }
+
+interface ApiResponse {
+  items?: Array<{
+    fieldData?: {
+      "gallery-images"?: GalleryImage[];
+    };
+  }>;
+}
+
+const textProtector = new TextArmorizer();
+const linkChecker = new UrlGuardian();
 
 async function fetchGalleryImages(): Promise<GalleryImage[]> {
   try {
-    if (!COLLECTION_ID) {
-      console.warn("COLLECTION_ID is not set");
-      return [];
-    }
+    const response = await apiClient.get<ApiResponse>(GALLERY_ENDPOINT);
 
-    if (!BASE_URL) {
-      console.warn("BASE_URL is not set");
-      return [];
-    }
+    const collectedImages: GalleryImage[] = [];
 
-    const endpoint = `/collections/${COLLECTION_ID}/items`;
-    const response = await apiClient.get<any>(endpoint);
+    const itemsList = response?.items || [];
 
-    // Extract fieldData from each item and get gallery-images array
-    const allGalleryImages: GalleryImage[] = [];
+    itemsList.forEach((item) => {
+      const galleryData = item?.fieldData?.["gallery-images"];
+      
+      if (Array.isArray(galleryData)) {
+        const verifiedImages = galleryData.filter((img) => 
+          img?.url && linkChecker.inspectImageLink(img.url)
+        );
+        collectedImages.push(...verifiedImages);
+      }
+    });
 
-    // Handle if response is an object with an items/data property
-    const itemsArray = Array.isArray(response)
-      ? response
-      : response?.items || response?.data || [];
-
-    if (Array.isArray(itemsArray)) {
-      itemsArray.forEach((item) => {
-        if (item.fieldData && Array.isArray(item.fieldData["gallery-images"])) {
-          allGalleryImages.push(...item.fieldData["gallery-images"]);
-        }
-      });
-    }
-
-    return allGalleryImages;
+    return collectedImages;
   } catch (error) {
-    console.error("Error fetching gallery images:", error);
+    console.error("Failed to load gallery");
     return [];
   }
 }
@@ -85,9 +80,10 @@ export default async function Gallery() {
                 >
                   <Image
                     src={image.url}
-                    alt={image.alt || image.title || "Gallery Image"}
+                    alt={textProtector.fortify(image.alt || image.title) || "Gallery Image"}
                     fill
                     className="object-cover transition-transform duration-300 hover:scale-105"
+                    priority={index < 4}
                   />
                 </div>
               );
