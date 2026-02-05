@@ -1,3 +1,3 @@
-export const BASE_URL = process.env.NEXT_PUBLIC_WEBFLOW_URL;
-export const WORKSPACE_TOKEN = process.env.NEXT_PUBLIC_WEBFLOW_WORKSPACE_TOKEN;
-export const COLLECTION_ID = process.env.NEXT_PUBLIC_WEBFLOW_COLLECTION_ID;
+// No sensitive credentials exposed to client
+// Server uses environment vars without NEXT_PUBLIC_ prefix
+export const GALLERY_ENDPOINT = '/gallery-data';
