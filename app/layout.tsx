@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Mona_Sans } from "next/font/google";
-import Navbar from "@/components/shared/navbar";
+import { Mona_Sans } from "next/font/google";
 import Footer from "@/components/shared/footer";
+import NavPathChecker from "@/components/shared/navPathChecker";
 import "./globals.css";
 
 const monaSans = Mona_Sans({
@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${monaSans.variable} antialiased`}>
         <div className="fixed w-full z-50">
-          <Navbar />
+          <NavPathChecker />
         </div>
         {children}
         <Footer />

@@ -1,6 +1,6 @@
 export default function Patreons() {
   return (
-    <section className="flex flex-col pt-40">
+    <section className="flex flex-col pt-40 max-md:px-5">
       <div className="max-w-7xl mx-auto w-full">
         <div className="text-end mb-10 flex flex-col gap-1">
           <h1 className="text-5xl font-bold font-mono">Patreons</h1>

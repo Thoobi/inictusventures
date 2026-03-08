@@ -21,4 +21,153 @@
 /* body {
   font-family: var(--font-), sans-serif;
 
-} */
+} 
+/* Custom cursor */
+.cursor-dot {
+  width: 12px;
+  height: 12px;
+  background: #c0281a;
+  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transition: transform 0.08s ease;
+}
+
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #f0e8d5;
+  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  mix-blend-mode: difference;
+  transition:
+    width 0.2s ease,
+    height 0.2s ease;
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Pillar hover bar */
+.pillar-card::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.pillar-card:hover::before {
+  transform: scaleX(1);
+}
+
+.pillar-dance::before {
+  background: #e05c2a;
+}
+.pillar-art::before {
+  background: #1a6b72;
+}
+.pillar-music::before {
+  background: #d4a017;
+}
+
+/* Manifesto quote mark */
+.manifesto-quote::before {
+  content: "\201C";
+  font-family: "DM Serif Display", serif;
+  font-size: 8rem;
+  color: #c0281a;
+  opacity: 0.25;
+  position: absolute;
+  top: -3rem;
+  left: -1rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Nav link underline */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #c0281a;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Event card hover */
+.event-card {
+  transition: transform 0.35s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-6px);
+}
+
+@keyframes slowspin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Vinyl pause on hover */
+.vinyl-record:hover {
+  animation-play-state: paused;
+}
+
+.animate-vinyl {
+  animation: slowspin 20s linear infinite;
+}
+
+.animate-ticker {
+  animation: ticker 20s linear infinite;
+}
+
+/* Pillar card hover bg */
+.pillar-card {
+  transition: background 0.4s ease;
+}
+.pillar-card:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
