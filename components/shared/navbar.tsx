@@ -36,7 +36,7 @@ export default function Navbar() {
             <li key={link.href} className="group relative">
               <Link
                 href={link.href}
-                className={`text-sm font-medium uppercase ${pathname === link.href && "font-bold"}`}
+                className={`text-sm font-semibold uppercase ${pathname === link.href && "font-bold"}`}
               >
                 {link.name}
               </Link>

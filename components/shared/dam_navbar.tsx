@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const damLinks = [
@@ -11,6 +11,7 @@ const damLinks = [
 ];
 
 export default function DamNavbar() {
+  const router = useRouter();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -66,7 +67,8 @@ export default function DamNavbar() {
           </li>
           <li>
             <button
-              onClick={() => {}}
+              type="button"
+              onClick={() => router.push("/dam/registration")}
               className={`text-sm py-2 px-3 bg-gray-900 text-white tracking-[0.03em] font-semibold uppercase no-underline transition-opacity cursor-pointer ${
                 isActiveLink("/dam/registration")
                   ? "text-dam-red"
