@@ -1,16 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import Image from "next/image";
+import DamGallerySlider, {
+  type DamGalleryImage,
+  type DamGalleryYearGroup,
+} from "../../../components/dam/gallerySlider";
 import { apiClient } from "@/apiclient";
 import { DAM_COLLECTION_ID, BASE_URL } from "@/constant";
-
-interface GalleryImage {
-  id: string;
-  url: string;
-  fileId?: string;
-  alt?: string | null;
-  title?: string;
-  [key: string]: any;
-}
 
 interface DamImage {
   fileId?: string;
@@ -24,7 +17,7 @@ interface DamItem {
     name?: string;
     slug?: string;
     year?: DamImage[];
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 
@@ -33,93 +26,89 @@ interface DamResponse {
   data?: DamItem[];
 }
 
-async function fetchGalleryImages(): Promise<GalleryImage[]> {
+interface DamGalleryResponse {
+  groups: DamGalleryYearGroup[];
+}
+
+async function fetchGalleryImages(): Promise<DamGalleryResponse> {
   try {
     if (!DAM_COLLECTION_ID) {
       console.warn("DAM_COLLECTION_ID is not set");
-      return [];
+      return { groups: [] };
     }
 
     if (!BASE_URL) {
       console.warn("BASE_URL is not set");
-      return [];
+      return { groups: [] };
     }
 
     const endpoint = `/collections/${DAM_COLLECTION_ID}/items`;
     const response = await apiClient.get<DamResponse | DamItem[]>(endpoint);
+    console.log("DAM API response:", response);
 
     const itemsArray = Array.isArray(response)
       ? response
       : response?.items || response?.data || [];
 
     if (!Array.isArray(itemsArray)) {
-      return [];
+      return { groups: [] };
     }
 
-    // Flatten `fieldData.year` image arrays from each item into one gallery list.
-    return itemsArray.flatMap((item) => {
-      const yearImages = item.fieldData?.year;
+    const groups = itemsArray
+      .map((item): DamGalleryYearGroup | null => {
+        const yearImages = item.fieldData?.year;
+        const yearLabel =
+          item.fieldData?.name || item.fieldData?.slug || "Unknown Year";
 
-      if (!Array.isArray(yearImages)) {
-        return [];
-      }
+        if (!Array.isArray(yearImages) || yearImages.length === 0) {
+          return null;
+        }
 
-      return yearImages
-        .filter((img): img is DamImage => Boolean(img?.url))
-        .map((img, index) => ({
-          id: `${item.id}-${img.fileId || index}`,
-          fileId: img.fileId,
-          url: img.url as string,
-          alt: img.alt,
-          title: item.fieldData?.name || item.fieldData?.slug,
-        }));
-    });
+        const images: DamGalleryImage[] = yearImages
+          .filter((img): img is DamImage => Boolean(img?.url))
+          .map((img, index) => ({
+            id: `${item.id}-${img.fileId || index}`,
+            fileId: img.fileId,
+            url: img.url as string,
+            alt: img.alt,
+            title: yearLabel,
+            year: yearLabel,
+          }));
+
+        if (images.length === 0) {
+          return null;
+        }
+
+        return {
+          year: yearLabel,
+          slug: item.fieldData?.slug,
+          images,
+        };
+      })
+      .filter((group): group is DamGalleryYearGroup => Boolean(group));
+
+    return { groups };
   } catch (error) {
     console.error("Error fetching gallery images:", error);
-    return [];
+    return { groups: [] };
   }
 }
 
 export default async function Gallery() {
-  const images = await fetchGalleryImages();
+  const { groups } = await fetchGalleryImages();
 
   return (
     <section className="min-h-screen bg-white py-40  px-4 md:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-start mb-10 flex flex-col gap-1">
-          <h1 className="text-5xl font-bold font-mono">Gallery</h1>
-          <p className="text-base text-gray-700 font-mono">
+          <h1 className="text-5xl max-md:text-3xl font-bold font-mono">
+            Gallery
+          </h1>
+          <p className="text-base max-md:text-sm text-gray-700 font-mono">
             This is the curation of DAM winners
           </p>
         </div>
-
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 auto-rows-[200px] gap-4 mb-16">
-          {images &&
-            images.map((image, index) => {
-              return (
-                <div
-                  key={image.id}
-                  className={`relative overflow-hidden bg-gray-200 ${
-                    index % 7 === 0
-                      ? "col-span-1 row-span-2"
-                      : index % 5 === 0
-                        ? "col-span-1 row-span-3"
-                        : index % 3 === 0
-                          ? "col-span-1 row-span-2"
-                          : "col-span-1 row-span-2"
-                  }`}
-                >
-                  <Image
-                    src={image.url}
-                    alt={image.alt || image.title || "DAM Gallery Image"}
-                    fill
-                    className="object-cover transition-transform duration-300 hover:scale-105"
-                  />
-                </div>
-              );
-            })}
-        </div>
+        <DamGallerySlider groups={groups} />
       </div>
     </section>
   );

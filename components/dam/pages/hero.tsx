@@ -26,6 +26,12 @@ export default function Hero() {
         </h1>
 
         <p
+          className="text-dam-red text-[0.65rem] tracking-[0.4em] uppercase mb-6"
+          style={{ animation: "fadeup 0.8s 0.2s ease both" }}
+        >
+          Celebrating Creativity
+        </p>
+        <p
           className="text-dam-gold mt-8"
           style={{
             fontFamily: "DM Serif Display, serif",

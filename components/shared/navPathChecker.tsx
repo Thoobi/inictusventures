@@ -3,9 +3,9 @@ import { usePathname } from "next/navigation";
 import Navbar from "./navbar";
 import DamNavbar from "./dam_navbar";
 
-const isInictusPath = (pathname: string) => {
-  const inictusPaths = ["/gallery", "/patreons", "/"];
-  return inictusPaths.includes(pathname);
+const isinisticPath = (pathname: string) => {
+  const inisticPaths = ["/gallery", "/patreons", "/"];
+  return inisticPaths.includes(pathname);
 };
 
 const isDamPath = (pathname: string) => {
@@ -16,7 +16,7 @@ const isDamPath = (pathname: string) => {
 export default function NavPathChecker() {
   return (
     <div>
-      {isInictusPath(usePathname()) && <Navbar />}
+      {isinisticPath(usePathname()) && <Navbar />}
       {isDamPath(usePathname()) && <DamNavbar />}
     </div>
   );

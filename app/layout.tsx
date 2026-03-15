@@ -10,8 +10,8 @@ const monaSans = Mona_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Inictus",
-  description: "Inictus Ventures",
+  title: "inistic",
+  description: "inistic Ventures",
 };
 
 export default function RootLayout({

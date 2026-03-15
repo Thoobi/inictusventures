@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 const damLinks = [
   { label: "Home", href: "/dam" },
   { label: "Gallery", href: "/dam/gallery" },
-  { label: "About", href: "/dam/about" },
+  // { label: "About", href: "/dam/about" },
 ];
 
 export default function DamNavbar() {
@@ -32,23 +32,23 @@ export default function DamNavbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-4 md:px-12 md:py-6 md:mix-blend-difference">
+      <nav className="fixed top-0 bg-white border-b border-gray-100 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 md:px-12 md:py-3 md:mix-blend-difference">
         <Link
           href="/dam"
-          className="font-bold text-2xl md:text-3xl tracking-widest text-dam-white"
+          className="font-bold text-2xl md:text-3xl font-mono tracking-widest text-dam-white"
         >
           D<span className="text-dam-red">·</span>A
           <span className="text-dam-red">·</span>M
         </Link>
 
-        <ul className="hidden md:flex gap-10 list-none">
+        <ul className="hidden md:flex gap-8 list-none items-center">
           {damLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
-                className={`relative font-semibold text-[0.8rem] tracking-[0.25em] uppercase no-underline transition-opacity ${
+                className={`relative font-semibold text-[0.9rem] tracking-[-0.04em] uppercase no-underline transition-opacity ${
                   isActiveLink(link.href)
-                    ? "text-dam-red"
+                    ? "text-red-700"
                     : "text-dam-white hover:opacity-70"
                 }`}
               >
@@ -58,23 +58,23 @@ export default function DamNavbar() {
           ))}
           <li>
             <Link
-              href="/dam/registration"
-              className={`text-[0.8rem] tracking-[0.25em] font-semibold uppercase no-underline transition-opacity ${
+              href="/"
+              className="text-[0.9rem] tracking-[-0.05em] font-semibold uppercase no-underline text-dam-white hover:opacity-70 transition-opacity"
+            >
+              Back to Inistic
+            </Link>
+          </li>
+          <li>
+            <button
+              onClick={() => {}}
+              className={`text-sm py-2 px-3 bg-gray-900 text-white tracking-[0.03em] font-semibold uppercase no-underline transition-opacity cursor-pointer ${
                 isActiveLink("/dam/registration")
                   ? "text-dam-red"
                   : "text-dam-white hover:opacity-70"
               }`}
             >
-              Register →
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/"
-              className="text-[0.8rem] tracking-[0.25em] font-semibold uppercase no-underline text-dam-white hover:opacity-70 transition-opacity"
-            >
-              ← Back to Inistic
-            </Link>
+              Register
+            </button>
           </li>
         </ul>
 
@@ -99,7 +99,7 @@ export default function DamNavbar() {
       </nav>
 
       <div
-        className={`md:hidden fixed inset-0 z-40 bg-black/45 transition-opacity duration-300 ${
+        className={`md:hidden fixed inset-0 z-40 bg-white/5 backdrop-blur-xs transition-opacity duration-300 ${
           isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setIsMenuOpen(false)}
@@ -107,7 +107,7 @@ export default function DamNavbar() {
       />
 
       <aside
-        className={`md:hidden fixed top-0 left-0 z-50 h-screen w-72 max-w-[86vw] bg-white px-6 pt-24 pb-8 transition-transform duration-300 ease-out ${
+        className={`md:hidden fixed top-0 left-0 z-50 h-screen w-72 max-w-[86vw] bg-white px-6 pt-20 pb-8 flex flex-col transition-transform duration-300 ease-out ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         aria-hidden={!isMenuOpen}
@@ -117,8 +117,8 @@ export default function DamNavbar() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className={`text-sm tracking-[0.22em] uppercase font-semibold ${
-                  isActiveLink(link.href) ? "text-dam-red" : "text-black"
+                className={`text-4xl tracking-[-0.06em] uppercase font-semibold ${
+                  isActiveLink(link.href) ? "text-red-700" : "text-black"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -129,26 +129,27 @@ export default function DamNavbar() {
           <li>
             <Link
               href="/dam/registration"
-              className={`text-sm tracking-[0.22em] uppercase font-semibold ${
+              className={`text-4xl tracking-[-0.05em] uppercase font-semibold ${
                 isActiveLink("/dam/registration")
                   ? "text-dam-red"
                   : "text-black"
               }`}
               onClick={() => setIsMenuOpen(false)}
             >
-              Register →
-            </Link>
-          </li>
-          <li className="pt-4 mt-4 border-t border-gray-200">
-            <Link
-              href="/"
-              className="text-sm tracking-[0.22em] uppercase font-semibold text-black"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              ← Back to Inistic
+              Register
             </Link>
           </li>
         </ul>
+
+        <div className="mt-auto pt-4 border-t border-gray-200">
+          <Link
+            href="/"
+            className="text-xl tracking-[-0.05em] uppercase font-semibold text-black"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Back to Inistic
+          </Link>
+        </div>
       </aside>
     </>
   );

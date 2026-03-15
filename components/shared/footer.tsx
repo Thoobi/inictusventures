@@ -23,19 +23,19 @@ export default function Footer() {
   const socialLinks = [
     {
       name: "Twitter/X",
-      href: "https://twitter.com/inictusmedia",
+      href: "https://twitter.com/inisticmedia",
     },
     {
       name: "Instagram",
-      href: "https://instagram.com/inictusmedia",
+      href: "https://instagram.com/inisticmedia",
     },
     {
       name: "LinkedIn",
-      href: "https://linkedin.com/company/inictusmedia",
+      href: "https://linkedin.com/company/inisticmedia",
     },
     {
       name: "YouTube",
-      href: "https://youtube.com/@inictusmedia",
+      href: "https://youtube.com/@inisticmedia",
     },
   ];
 

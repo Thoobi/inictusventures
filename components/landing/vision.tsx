@@ -34,7 +34,7 @@ export default function Vision() {
             OUR VISION
           </h1>
           <p className="text-base max-md:text-sm font-medium text-gray-800 mb-10 max-md:mb-8">
-            At Inictus Ventures, our vision is to be the leading multimedia
+            At inistic Ventures, our vision is to be the leading multimedia
             platform that celebrates and promotes creativity across all kinds of
             expression, from television, radio to theater, craft, and fashion.
           </p>
@@ -45,7 +45,7 @@ export default function Vision() {
             return (
               <div
                 key={item.id}
-                className="flex flex-col group gap-8 border-b border-b-black py-10 max-md:py-4 cursor-pointer px-6 -mx-6 hover:bg-gray-50 transition-all duration-300 max-md:px-0"
+                className="flex flex-col group gap-8 border-b border-b-gray-400 py-10 max-md:py-4 cursor-pointer px-6 -mx-6 transition-all duration-300 max-md:px-0"
               >
                 <h2 className="text-[40px] max-md:text-3xl tracking-[-0.03em] uppercase font-bold group-hover:text-opacity-80 transition-all duration-300">
                   {item.label}

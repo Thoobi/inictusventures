@@ -19,11 +19,11 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="flex flex-row items-center w-full justify-between bg-white font-mono px-8 max-md:pr-5 max-md:pl-2">
+    <nav className="flex flex-row items-center w-full justify-between bg-white border-b border-gray-200 font-mono px-8 max-md:pr-5 max-md:pl-2">
       <Link href={"/"} className="">
         <Image
           src={Logo}
-          alt="Inictus Logo"
+          alt="inistic Logo"
           width={100}
           height={100}
           className="w-32 h-auto object-cover max-md:w-30"
@@ -36,7 +36,7 @@ export default function Navbar() {
             <li key={link.href} className="group relative">
               <Link
                 href={link.href}
-                className={`text-sm font-medium ${pathname === link.href && "font-bold"}`}
+                className={`text-sm font-medium uppercase ${pathname === link.href && "font-bold"}`}
               >
                 {link.name}
               </Link>
@@ -70,7 +70,7 @@ export default function Navbar() {
       </button>
 
       <div
-        className={`lg:hidden fixed inset-0 bg-black/35 transition-opacity duration-300 z-30 ${
+        className={`lg:hidden fixed inset-0 bg-black/35 backdrop-blur-sm transition-opacity duration-300 z-30 ${
           isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={() => setIsMenuOpen(false)}
@@ -88,7 +88,7 @@ export default function Navbar() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className={`text-2xl font-semibold tracking-tight ${
+                className={`text-4xl uppercase font-semibold tracking-[-0.05em] ${
                   pathname === link.href ? "text-red-700" : "text-black"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
