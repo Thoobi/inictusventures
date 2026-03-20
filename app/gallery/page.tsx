@@ -3,6 +3,8 @@ import Image from "next/image";
 import { apiClient } from "@/apiclient";
 import { COLLECTION_ID, BASE_URL } from "@/constant";
 
+export const revalidate = 1200; // Revalidate every 20 minuted
+
 interface GalleryImage {
   id: string;
   title?: string;
