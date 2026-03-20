@@ -4,7 +4,7 @@ import PatreonsGrid, {
   type PatreonCardData,
 } from "@/components/patreons/patreonsGrid";
 
-export const revalidate = 1200; // Revalidate every 20 minutes to ensure we have up-to-date patreon information without excessive API calls
+export const revalidate = 60; // Revalidate every 20 minutes to ensure we have up-to-date patreon information without excessive API calls
 
 interface PatreonImageField {
   url?: string;

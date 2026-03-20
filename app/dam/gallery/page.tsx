@@ -5,7 +5,7 @@ import DamGallerySlider, {
 import { apiClient } from "@/apiclient";
 import { DAM_COLLECTION_ID, BASE_URL } from "@/constant";
 
-export const revalidate = 1200;
+export const revalidate = 60;
 
 interface DamImage {
   fileId?: string;
