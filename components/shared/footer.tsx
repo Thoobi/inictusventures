@@ -97,8 +97,8 @@ export default function Footer() {
           reserved.
         </p>
       </div>
-      <div className="relative bottom-0 h-24 sm:h-32 md:h-44 lg:h-56 xl:h-72 overflow-hidden w-full flex justify-center">
-        <h1 className="absolute whitespace-nowrap text-[96px]/[100px] sm:text-[140px]/[150px] md:text-[210px]/[220px] lg:text-[300px]/[320px] xl:text-[400px]/[420px] tracking-[-0.05em] text-center font-semibold">
+      <div className="relative bottom-0 h-30 sm:h-32 md:h-44 lg:h-56 xl:h-90 overflow-hidden w-full flex justify-center">
+        <h1 className="absolute whitespace-nowrap text-[110px]/[120px] sm:text-[140px]/[150px] md:text-[210px]/[220px] lg:text-[300px]/[320px] xl:text-[400px]/[420px] tracking-[-0.05em] text-center font-semibold">
           INISTIC
         </h1>
       </div>

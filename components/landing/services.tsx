@@ -45,7 +45,7 @@ export default function Services() {
           return (
             <div
               key={service.id}
-              className="flex w-full flex-col group rounded-[15px] max-md:rounded-lg justify-between px-3 min-h-140 max-md:min-h-60 bg-gray-100 pt-12 max-md:pt-5 pb-5 text-left transition-all duration-300 md:hover:bg-red-700 max-md:bg-red-700"
+              className="flex w-full flex-col group rounded-[15px] max-md:rounded-lg justify-between px-3 min-h-140 max-md:min-h-100 bg-gray-100 pt-12 max-md:pt-5 pb-5 text-left transition-all duration-300 md:hover:bg-red-700 max-md:bg-red-700"
             >
               <h2 className="text-3xl max-md:text-lg tracking-[-0.03em] uppercase font-bold transition-all duration-300 md:group-hover:text-opacity-80 md:group-hover:text-white">
                 {service.label}

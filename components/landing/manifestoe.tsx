@@ -75,7 +75,7 @@ export default async function Manifesteos() {
         </h1>
       </div>
       <div className="flex flex-col gap-10 max-md:gap-8 pb-20 pt-10 max-md:pt-5 max-md:pb-5 px-5">
-        <div className="flex flex-row gap-5 w-full flex-wrap">
+        <div className="flex flex-row justify-start lg:gap-5 gap-x-14 max-md:justify-start w-full flex-wrap">
           {images.map((img, index) => (
             <Image
               key={index}
@@ -83,7 +83,7 @@ export default async function Manifesteos() {
               alt={img.alt}
               width={250}
               height={150}
-              className="h-auto w-28 object-contain"
+              className="h-auto w-28 max-md:w-20 object-contain"
             />
           ))}
         </div>
