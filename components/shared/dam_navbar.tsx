@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 const damLinks = [
   { label: "Home", href: "/dam" },
   { label: "Gallery", href: "/dam/gallery" },
-  // { label: "About", href: "/dam/about" },
+  { label: "Judges", href: "/dam/judges" },
 ];
 
 export default function DamNavbar() {

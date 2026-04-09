@@ -147,17 +147,6 @@ export default function RegistrationForm() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    console.log("DAM Registration payload", {
-      fullName,
-      email,
-      address,
-      source,
-      phone,
-      category,
-      musicType: isMusicCategory ? musicType : undefined,
-      whyJoin,
-    });
   };
 
   return (

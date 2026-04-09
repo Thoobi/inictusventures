@@ -7,8 +7,8 @@ export default function Footer() {
       href: "/",
     },
     {
-      name: "Patreons",
-      href: "/patreons",
+      name: "patrons",
+      href: "/patrons",
     },
     {
       name: "Gallery",

@@ -10,7 +10,7 @@ import { useState } from "react";
 const navbarLinks = [
   { name: "Home", href: "/" },
   { name: "Gallery", href: "/gallery" },
-  { name: "Patreons", href: "/patreons" },
+  { name: "Patrons", href: "/patrons" },
   { name: "D-A-M", href: "/dam" },
 ];
 

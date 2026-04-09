@@ -20,8 +20,8 @@ export interface PatreonCardData {
   };
 }
 
-interface PatreonsGridProps {
-  patreons: PatreonCardData[];
+interface patronsGridProps {
+  patrons: PatreonCardData[];
 }
 
 function formatPatreonAboutPreview(html: string): string {
@@ -36,7 +36,7 @@ function formatPatreonAboutModal(html: string): string {
   return html.replace(/<p>(?:\s|&nbsp;| |&#8205;)*<\/p>/g, "").trim();
 }
 
-export default function PatreonsGrid({ patreons }: PatreonsGridProps) {
+export default function PatronsGrid({ patrons }: patronsGridProps) {
   const [activePatreon, setActivePatreon] = useState<PatreonCardData | null>(
     null,
   );
@@ -60,7 +60,7 @@ export default function PatreonsGrid({ patreons }: PatreonsGridProps) {
   return (
     <>
       <div className="flex flex-wrap flex-row gap-10">
-        {patreons.map((patreon) => (
+        {patrons.map((patreon) => (
           <div
             key={patreon.slug}
             className="w-full md:w-100 min-w-0 bg-red-800 p-3 rounded-lg max-md:rounded-xl justify-center items-start flex flex-col gap-4"

@@ -46,7 +46,7 @@ async function fetchGalleryImages(): Promise<DamGalleryResponse> {
 
     const endpoint = `/collections/${DAM_COLLECTION_ID}/items`;
     const response = await apiClient.get<DamResponse | DamItem[]>(endpoint);
-    console.log("DAM API response:", response);
+    // console.log("DAM API response:", response);
 
     const itemsArray = Array.isArray(response)
       ? response

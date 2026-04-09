@@ -1,8 +1,8 @@
 import { apiClient } from "@/apiclient";
 import { PATREON_COLLECTION_ID, BASE_URL } from "@/constant";
-import PatreonsGrid, {
+import PatronsGrid, {
   type PatreonCardData,
-} from "@/components/patreons/patreonsGrid";
+} from "@/components/patrons/patronsGrid";
 
 export const revalidate = 60; // Revalidate every 20 minutes to ensure we have up-to-date patreon information without excessive API calls
 
@@ -50,7 +50,7 @@ function getStringField(
   return undefined;
 }
 
-async function fetchPatreons(): Promise<PatreonCardData[]> {
+async function fetchpatrons(): Promise<PatreonCardData[]> {
   try {
     if (!PATREON_COLLECTION_ID) {
       console.warn("PATREON_COLLECTION_ID is not set");
@@ -67,7 +67,7 @@ async function fetchPatreons(): Promise<PatreonCardData[]> {
       endpoint,
     );
 
-    const allPatreons: PatreonCardData[] = [];
+    const allpatrons: PatreonCardData[] = [];
 
     const itemsArray = Array.isArray(response)
       ? response
@@ -86,7 +86,7 @@ async function fetchPatreons(): Promise<PatreonCardData[]> {
           return;
         }
 
-        allPatreons.push({
+        allpatrons.push({
           name: item.fieldData.name || "",
           about: item.fieldData.about || "",
           slug: item.fieldData.slug || item.id,
@@ -104,29 +104,29 @@ async function fetchPatreons(): Promise<PatreonCardData[]> {
       });
     }
 
-    return allPatreons;
+    return allpatrons;
   } catch (error) {
-    console.error("Error fetching patreons:", error);
+    console.error("Error fetching patrons:", error);
     return [];
   }
 }
 
-export default async function Patreons() {
-  const patreons = await fetchPatreons();
+export default async function patrons() {
+  const patrons = await fetchpatrons();
   return (
     <section className="flex flex-col py-40 max-md:py-30 max-md:px-5 bg-[#fbfbfb]">
       <div className="max-w-7xl mx-auto w-full">
         <div className="text-start mb-10 flex flex-col gap-1">
           <h1 className="text-5xl max-md:text-3xl font-bold font-mono">
-            Patreons
+            patrons
           </h1>
           <p className="text-base max-md:text-sm text-black font-mono max-w-2xl">
-            We are grateful for the support of our patreons who make our work
+            We are grateful for the support of our patrons who make our work
             possible. Their contributions help us continue to create and
             innovate.
           </p>
         </div>
-        <PatreonsGrid patreons={patreons} />
+        <PatronsGrid patrons={patrons} />
       </div>
     </section>
   );
