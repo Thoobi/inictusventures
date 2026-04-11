@@ -2,6 +2,7 @@ import Image from "next/image";
 import Button from "../custom/button";
 import { apiClient } from "@/apiclient";
 import { SPONSOR_LOGO_COLLECTION_ID, BASE_URL } from "@/constant";
+export const revalidate = 1200; // Revalidate every 20 minutes to ensure we have up-to-date sponsor information without excessive API calls
 
 interface SponsorImage {
   fileId: string;

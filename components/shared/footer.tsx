@@ -35,7 +35,7 @@ export default function Footer() {
     },
     {
       name: "YouTube",
-      href: "https://youtube.com/@inisticmedia",
+      href: "https://youtube.com/@inistictv",
     },
   ];
 

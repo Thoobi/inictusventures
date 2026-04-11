@@ -68,8 +68,8 @@ export default function PatronsGrid({ patrons }: patronsGridProps) {
             <div className="flex flex-row justify-between w-full">
               <Image
                 src={patreon.patreonImage.url}
-                width={100}
-                height={100}
+                width={500}
+                height={500}
                 alt={patreon.patreonImage.alt || patreon.name}
                 className="object-cover h-60 w-60 max-md:h-30 max-md:w-30 object-center transition-transform duration-300 hover:scale-102 rounded-xl"
               />
