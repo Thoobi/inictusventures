@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { apiClient } from "@/apiclient";
 import { JUDGES_COLLECTION_ID, BASE_URL } from "@/constant";
+import JudgesByYearGrid from "@/components/dam/judgesByYearGrid";
 
 export const revalidate = 60;
 
@@ -136,49 +136,7 @@ export default async function Judges() {
         {years.length === 0 ? (
           <p className="text-gray-500">No judges found</p>
         ) : (
-          years.map((year) => (
-            <div key={year} className="mb-16">
-              <h2 className="text-3xl font-bold font-mono mb-8">{year}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {judgesByYear[year].map((judge) => {
-                  const judgeImage = judge.fieldData?.["judge-image"] as
-                    | JudgeImage
-                    | undefined;
-                  const judgeName = judge.fieldData?.["judge-name"] as
-                    | string
-                    | undefined;
-                  const category = judge.categoryName;
-
-                  return (
-                    <div
-                      key={judge.id}
-                      className="flex flex-col items-center text-center"
-                    >
-                      {judgeImage?.url && (
-                        <div className="w-full h-120 max-md:h-80 max-md:w-full bg-gray-100 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
-                          <Image
-                            src={judgeImage.url}
-                            alt={judgeName || "Judge"}
-                            width={200}
-                            height={200}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      )}
-                      <h3 className="text-xl font-semibold font-mono">
-                        {judgeName || "Unknown"}
-                      </h3>
-                      {category && (
-                        <p className="text-sm text-gray-600 font-mono mt-1">
-                          {category} Judge
-                        </p>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))
+          <JudgesByYearGrid years={years} judgesByYear={judgesByYear} />
         )}
       </div>
     </section>

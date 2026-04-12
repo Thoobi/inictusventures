@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { apiClient } from "@/apiclient";
 import { BASE_URL, TEAMS_COLLECTION_ID } from "@/constant";
+import TeamsImageGrid from "@/components/dam/teamsImageGrid";
 
 export const revalidate = 60;
 
@@ -94,22 +94,7 @@ export default async function Teams() {
         {images.length === 0 ? (
           <p className="text-gray-500">No team images found</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {images.map((image, index) => (
-              <div
-                key={`${image.fileId || image.url}-${index}`}
-                className="w-full h-120 max-md:h-80 rounded-lg overflow-hidden"
-              >
-                <Image
-                  src={image.url as string}
-                  alt={image.alt || "Team image"}
-                  width={600}
-                  height={800}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-            ))}
-          </div>
+          <TeamsImageGrid images={images} />
         )}
       </div>
     </section>
