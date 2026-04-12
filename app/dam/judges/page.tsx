@@ -155,7 +155,7 @@ export default async function Judges() {
                       className="flex flex-col items-center text-center"
                     >
                       {judgeImage?.url && (
-                        <div className="w-full h-120 max-md:h-80 max-md:w-80 bg-gray-100 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+                        <div className="w-full h-120 max-md:h-80 max-md:w-full bg-gray-100 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
                           <Image
                             src={judgeImage.url}
                             alt={judgeName || "Judge"}

@@ -23,7 +23,7 @@ export default function Footer() {
   const socialLinks = [
     {
       name: "Twitter/X",
-      href: "https://twitter.com/inisticmedia",
+      href: "https://x.com/InisticTv",
     },
     {
       name: "Instagram",

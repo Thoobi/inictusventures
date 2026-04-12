@@ -14,6 +14,7 @@ const isDamPath = (pathname: string) => {
     "/dam/registration",
     "/dam/about",
     "/dam/judges",
+    "/dam/teams",
     "/dam",
   ];
   return damPaths.includes(pathname);

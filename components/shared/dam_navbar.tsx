@@ -8,6 +8,7 @@ const damLinks = [
   { label: "Home", href: "/dam" },
   { label: "Gallery", href: "/dam/gallery" },
   { label: "Judges", href: "/dam/judges" },
+  { label: "Teams", href: "/dam/teams" },
 ];
 
 export default function DamNavbar() {
