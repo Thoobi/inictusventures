@@ -12,7 +12,7 @@ import ScrollReveal from "@/components/dam/scrollReveal";
 export default function Home() {
   return (
     <main className="bg-dam-black min-h-screen">
-      <Cursor />
+      {/* <Cursor /> */}
       <ScrollReveal />
       <Hero />
       <Ticker />
