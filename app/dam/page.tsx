@@ -6,7 +6,7 @@ import Pillars from "@/components/dam/pages/pillars";
 import Events from "@/components/dam//pages/events";
 import Manifesto from "@/components/dam/pages/manifestoe";
 import VinylStrip from "@/components/dam/pages/vinylStrip";
-import Cursor from "@/components/dam/cursor";
+// import Cursor from "@/components/dam/cursor";
 import ScrollReveal from "@/components/dam/scrollReveal";
 
 export default function Home() {
