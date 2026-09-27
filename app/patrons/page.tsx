@@ -1,133 +1,142 @@
 import { apiClient } from "@/apiclient";
 import { PATREON_COLLECTION_ID, BASE_URL } from "@/constant";
 import PatronsGrid, {
-  type PatreonCardData,
+	type PatreonCardData,
 } from "@/components/patrons/patronsGrid";
+import SupportUsSection from "@/components/patrons/supportUsSection";
 
 export const revalidate = 60; // Revalidate every 20 minutes to ensure we have up-to-date patreon information without excessive API calls
 
 interface PatreonImageField {
-  url?: string;
-  fileId?: string;
-  alt?: string;
+	url?: string;
+	fileId?: string;
+	alt?: string;
 }
 
 interface PatreonItem {
-  id: string;
-  fieldData?: {
-    name?: string;
-    about?: string;
-    slug?: string;
-    email?: string;
-    phone?: string;
-    "e-mail"?: string;
-    "phone-number"?: string;
-    "patreon-image"?: PatreonImageField | PatreonImageField[];
-    [key: string]: unknown;
-  };
+	id: string;
+	fieldData?: {
+		name?: string;
+		about?: string;
+		slug?: string;
+		email?: string;
+		phone?: string;
+		"e-mail"?: string;
+		"phone-number"?: string;
+		"patreon-image"?: PatreonImageField | PatreonImageField[];
+		[key: string]: unknown;
+	};
 }
 
 interface PatreonResponse {
-  items?: PatreonItem[];
-  data?: PatreonItem[];
+	items?: PatreonItem[];
+	data?: PatreonItem[];
 }
 
 function getStringField(
-  fieldData: PatreonItem["fieldData"],
-  keys: string[],
+	fieldData: PatreonItem["fieldData"],
+	keys: string[],
 ): string | undefined {
-  if (!fieldData) {
-    return undefined;
-  }
+	if (!fieldData) {
+		return undefined;
+	}
 
-  for (const key of keys) {
-    const value = fieldData[key];
-    if (typeof value === "string" && value.trim()) {
-      return value.trim();
-    }
-  }
+	for (const key of keys) {
+		const value = fieldData[key];
+		if (typeof value === "string" && value.trim()) {
+			return value.trim();
+		}
+	}
 
-  return undefined;
+	return undefined;
 }
 
 async function fetchpatrons(): Promise<PatreonCardData[]> {
-  try {
-    if (!PATREON_COLLECTION_ID) {
-      console.warn("PATREON_COLLECTION_ID is not set");
-      return [];
-    }
+	try {
+		if (!PATREON_COLLECTION_ID) {
+			console.warn("PATREON_COLLECTION_ID is not set");
+			return [];
+		}
 
-    if (!BASE_URL) {
-      console.warn("BASE_URL is not set");
-      return [];
-    }
+		if (!BASE_URL) {
+			console.warn("BASE_URL is not set");
+			return [];
+		}
 
-    const endpoint = `/collections/${PATREON_COLLECTION_ID}/items`;
-    const response = await apiClient.get<PatreonResponse | PatreonItem[]>(
-      endpoint,
-    );
+		const endpoint = `/collections/${PATREON_COLLECTION_ID}/items`;
+		const response = await apiClient.get<PatreonResponse | PatreonItem[]>(
+			endpoint,
+		);
 
-    const allpatrons: PatreonCardData[] = [];
+		const allpatrons: PatreonCardData[] = [];
 
-    const itemsArray = Array.isArray(response)
-      ? response
-      : response?.items || response?.data || [];
+		const itemsArray = Array.isArray(response)
+			? response
+			: response?.items || response?.data || [];
 
-    if (Array.isArray(itemsArray)) {
-      itemsArray.forEach((item) => {
-        if (!item.fieldData) {
-          return;
-        }
+		if (Array.isArray(itemsArray)) {
+			itemsArray.forEach((item) => {
+				if (!item.fieldData) {
+					return;
+				}
 
-        const imageField = item.fieldData["patreon-image"];
-        const image = Array.isArray(imageField) ? imageField[0] : imageField;
+				const imageField = item.fieldData["patreon-image"];
+				const image = Array.isArray(imageField)
+					? imageField[0]
+					: imageField;
 
-        if (!image?.url || !image?.fileId) {
-          return;
-        }
+				if (!image?.url || !image?.fileId) {
+					return;
+				}
 
-        allpatrons.push({
-          name: item.fieldData.name || "",
-          about: item.fieldData.about || "",
-          slug: item.fieldData.slug || item.id,
-          email: getStringField(item.fieldData, ["patreon-mail", "e-mail"]),
-          phone: getStringField(item.fieldData, [
-            "patreon-phone",
-            "phone-number",
-          ]),
-          patreonImage: {
-            url: image.url,
-            fileId: image.fileId,
-            alt: image.alt,
-          },
-        });
-      });
-    }
+				allpatrons.push({
+					name: item.fieldData.name || "",
+					about: item.fieldData.about || "",
+					slug: item.fieldData.slug || item.id,
+					email: getStringField(item.fieldData, [
+						"patreon-mail",
+						"e-mail",
+					]),
+					phone: getStringField(item.fieldData, [
+						"patreon-phone",
+						"phone-number",
+					]),
+					patreonImage: {
+						url: image.url,
+						fileId: image.fileId,
+						alt: image.alt,
+					},
+				});
+			});
+		}
 
-    return allpatrons;
-  } catch (error) {
-    console.error("Error fetching patrons:", error);
-    return [];
-  }
+		return allpatrons;
+	} catch (error) {
+		console.error("Error fetching patrons:", error);
+		return [];
+	}
 }
 
 export default async function patrons() {
-  const patrons = await fetchpatrons();
-  return (
-    <section className="flex flex-col py-40 max-md:py-30 max-md:px-5 bg-[#fbfbfb]">
-      <div className="max-w-7xl mx-auto w-full">
-        <div className="text-start mb-10 flex flex-col gap-1">
-          <h1 className="text-5xl max-md:text-3xl font-bold font-mono">
-            patrons
-          </h1>
-          <p className="text-base max-md:text-sm text-black font-mono max-w-2xl">
-            We are grateful for the support of our patrons who make our work
-            possible. Their contributions help us continue to create and
-            innovate.
-          </p>
-        </div>
-        <PatronsGrid patrons={patrons} />
-      </div>
-    </section>
-  );
+	const patrons = await fetchpatrons();
+	return (
+		<section className="flex flex-col py-40 max-md:py-30 max-md:px-5 bg-[#fbfbfb]">
+			<div className="max-w-7xl mx-auto w-full">
+				<div className="text-start mb-10 flex flex-col gap-1">
+					<h1 className="text-5xl max-md:text-3xl font-bold font-mono">
+						Patrons
+					</h1>
+					<p className="text-base max-md:text-sm text-black font-mono max-w-2xl">
+						We are grateful for the support of our patrons who make
+						our work possible. Their contributions help us continue
+						to create and innovate.
+					</p>
+				</div>
+
+				<SupportUsSection />
+
+				<PatronsGrid patrons={patrons} />
+			</div>
+		</section>
+	);
 }
