@@ -98,6 +98,7 @@ export default async function Manifesteos() {
         <div className="flex flex-col justify-center items-center">
           <Button
             title="Partner with us"
+            href="/patrons"
             className="bg-linear-to-r from-red-700 to-black text-lg text-white font-bold py-4 max-md:py-3 max-md:px-5 px-8 rounded-lg hover:from-black hover:to-red-700 hover:scale-105 transition-all duration-300 ease-out max-md:text-sm"
           />
         </div>

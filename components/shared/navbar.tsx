@@ -7,6 +7,11 @@ import Logo from "../../public/assets/logo.png";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
+// Mobile sidebar stagger timings (ms)
+const STAGGER_IN_OFFSET = 150;
+const STAGGER_IN_STEP = 80;
+const STAGGER_OUT_STEP = 50;
+
 const navbarLinks = [
   { name: "Home", href: "/" },
   { name: "Gallery", href: "/gallery" },
@@ -81,14 +86,33 @@ export default function Navbar() {
         className={`lg:hidden fixed top-0 left-0 z-40 h-screen w-72 max-w-[85vw] bg-white shadow-xl px-6 py-20 transition-transform duration-300 ease-out ${
           isMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
+        style={{
+          // Wait for the links to stagger out before sliding the sidebar away
+          transitionDelay: isMenuOpen
+            ? "0ms"
+            : `${navbarLinks.length * STAGGER_OUT_STEP}ms`,
+        }}
         aria-hidden={!isMenuOpen}
       >
         <ul className="flex flex-col gap-6">
-          {navbarLinks.map((link) => (
-            <li key={link.href}>
+          {navbarLinks.map((link, index) => (
+            <li
+              key={link.href}
+              className={`transition-all duration-300 ease-out ${
+                isMenuOpen
+                  ? "opacity-100 translate-x-0"
+                  : "opacity-0 -translate-x-6"
+              }`}
+              style={{
+                transitionDelay: isMenuOpen
+                  ? `${STAGGER_IN_OFFSET + index * STAGGER_IN_STEP}ms`
+                  : `${(navbarLinks.length - 1 - index) * STAGGER_OUT_STEP}ms`,
+              }}
+            >
               <Link
                 href={link.href}
-                className={`text-4xl uppercase font-semibold tracking-[-0.05em] ${
+                tabIndex={isMenuOpen ? 0 : -1}
+                className={`text-4xl uppercase font-bold tracking-[-0.05em] ${
                   pathname === link.href ? "text-red-700" : "text-black"
                 }`}
                 onClick={() => setIsMenuOpen(false)}

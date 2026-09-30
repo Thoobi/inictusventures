@@ -71,17 +71,20 @@ export default async function Gallery() {
         </div>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 auto-rows-[350px] gap-2 max-md:auto-rows-auto mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
           {images &&
             images.map((image) => {
               return (
-                <div key={image.id} className={`relative overflow-hidden`}>
+                <div
+                  key={image.id}
+                  className="group relative h-100 overflow-hidden bg-gray-200 rounded-lg"
+                >
                   <Image
                     src={image.url}
                     alt={image.alt || image.title || "Gallery Image"}
-                    height={400}
-                    width={400}
-                    className="object-cover transition-transform h-auto duration-300 hover:scale-102"
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                   />
                 </div>
               );

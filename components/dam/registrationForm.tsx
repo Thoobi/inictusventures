@@ -128,7 +128,7 @@ const musicTypeOptions: DropdownOption[] = [
 	{ label: "Team (3 - 4 persons)", value: "team" },
 ];
 
-const INSTAGRAM_URL = "https://www.instagram.com/inisticmedia/";
+const INSTAGRAM_URL = "https://www.instagram.com/dam.talent?stkn=MWlyOTEyN3pnMHJ5OA==";
 const QR_CODE_URL = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(INSTAGRAM_URL)}`;
 
 export default function RegistrationForm() {
