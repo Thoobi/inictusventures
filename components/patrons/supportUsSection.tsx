@@ -15,14 +15,14 @@ const sponsorshipTiers: Record<
 	readonly { label: string; value: string }[]
 > = {
 	dam: [
-		{ label: "Platinum — ₦100M – ₦200M", value: "platinum" },
-		{ label: "Gold — ₦5M – ₦20M", value: "gold" },
+		{ label: "Platinum — ₦100M – ₦500M", value: "platinum" },
+		{ label: "Gold — ₦5M – ₦10M", value: "gold" },
 		{ label: "Silver — ₦1M – ₦5M", value: "silver" },
 		{ label: "Bronze — ₦100K – ₦500K", value: "bronze" },
 	],
 	"inistic-meets-the-needy": [
 		{ label: "Gold — ₦5M – ₦20M", value: "gold" },
-		{ label: "Silver — ₦500K – ₦1M", value: "silver" },
+		{ label: "Silver — ₦1M – ₦5M", value: "silver" },
 		{ label: "Bronze — ₦100K – ₦500K", value: "bronze" },
 	],
 };
@@ -381,7 +381,7 @@ export default function SupportUsSection() {
 				<button
 					type="button"
 					onClick={() => setIsOpen(true)}
-					className="bg-linear-to-r from-red-700 to-black text-lg text-white font-bold py-4 max-md:py-3 max-md:px-5 px-8 rounded-lg hover:from-black hover:to-red-700 hover:scale-105 transition-all duration-300 ease-out max-md:text-sm cursor-pointer"
+					className="bg-linear-to-r from-red-700 to-black text-lg text-white font-bold py-2.5 max-md:py-2 max-md:px-5 px-8 rounded-lg hover:from-black hover:to-red-700 hover:scale-105 transition-all duration-300 ease-out max-md:text-sm cursor-pointer"
 				>
 					Sponsor us
 				</button>
