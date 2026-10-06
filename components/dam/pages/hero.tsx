@@ -23,6 +23,7 @@ export default function Hero() {
 					}}
 				>
 					D<span className="text-dam-red">A</span>M
+					<span className="sr-only"> — Dance, Art &amp; Music</span>
 				</h1>
 
 				{/* <p

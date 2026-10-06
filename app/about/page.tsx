@@ -1,3 +1,14 @@
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+	title: "About Us",
+	description: "Learn about Inistic Ventures, the multimedia company behind DAM and a new generation of creative talent.",
+	path: "/about",
+	// Placeholder page — keep it out of search results until it has real content.
+	noIndex: true,
+});
+
 export default function About() {
   return (
     <section className="flex flex-col pt-10">

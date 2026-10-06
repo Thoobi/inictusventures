@@ -4,6 +4,8 @@ import DamGallerySlider, {
 } from "../../../components/dam/gallerySlider";
 import { apiClient } from "@/apiclient";
 import { DAM_COLLECTION_ID, BASE_URL } from "@/constant";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -95,6 +97,12 @@ async function fetchGalleryImages(): Promise<DamGalleryResponse> {
     return { groups: [] };
   }
 }
+
+export const metadata: Metadata = pageMetadata({
+	title: "Gallery",
+	description: "Browse the DAM gallery — photos of past winners and highlights from every year of Dance, Art and Music.",
+	path: "/dam/gallery",
+});
 
 export default async function Gallery() {
   const { groups } = await fetchGalleryImages();

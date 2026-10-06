@@ -71,9 +71,9 @@ export default async function Manifesteos() {
         [ Collaborations ]
       </span>
       <div className="xl:w-[50%] flex flex-col justify-start items-start px-12 max-md:px-5">
-        <h1 className="text-8xl max-md:text-6xl text-right tracking-[-0.05em] font-bold text-red-700 mb-4">
+        <h2 className="text-8xl max-md:text-6xl text-right tracking-[-0.05em] font-bold text-red-700 mb-4">
           WORK WITH US
-        </h1>
+        </h2>
       </div>
       <div className="flex flex-col gap-10 max-md:gap-8 pb-20 pt-10 max-md:pt-5 max-md:pb-5 lg:px-10 px-5">
         <div className="grid grid-cols-3 xl:grid-cols-5 gap-5 place-items-center">

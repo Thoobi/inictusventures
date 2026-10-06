@@ -1,4 +1,12 @@
 import RegistrationForm from "@/components/dam/registrationForm";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = pageMetadata({
+	title: "Street Battle Registration",
+	description: "Register for the DAM Street Battle — a discovery of new talent in dance, art and music. Sign up solo or as a team.",
+	path: "/dam/registration",
+});
 
 export default function Page() {
   return (

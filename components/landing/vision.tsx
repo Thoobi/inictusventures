@@ -31,9 +31,9 @@ export default function Vision() {
           <span className="text-sm max-md:text-xs font-bold tracking-[-0.02em] text-red-700 mb-3 max-md:mb-0 uppercase">
             [ WHERE WE ARE GOING ]
           </span>
-          <h1 className="text-8xl max-md:text-6xl tracking-[-0.05em] font-bold text-red-700 mb-4 max-md:mb-2 max-md:w-1/2">
+          <h2 className="text-8xl max-md:text-6xl tracking-[-0.05em] font-bold text-red-700 mb-4 max-md:mb-2 max-md:w-1/2">
             OUR VISION
-          </h1>
+          </h2>
           <p className="text-base max-md:text-sm font-medium text-gray-800 lg:mb-10">
             At inistic Ventures, our vision is to be the leading multimedia
             platform that celebrates and promotes creativity across all kinds of
@@ -48,9 +48,9 @@ export default function Vision() {
                 key={item.id}
                 className="flex flex-col group gap-8 border-b border-b-gray-400 py-10 max-md:py-4 cursor-pointer px-6 -mx-6 transition-all duration-300 max-md:px-0"
               >
-                <h2 className="text-[40px] max-md:text-3xl tracking-[-0.03em] uppercase font-bold group-hover:text-opacity-80 transition-all duration-300">
+                <h3 className="text-[40px] max-md:text-3xl tracking-[-0.03em] uppercase font-bold group-hover:text-opacity-80 transition-all duration-300">
                   {item.label}
-                </h2>
+                </h3>
                 <p className="xl:hidden text-lg text-black overflow-hidden">
                   {item.content}
                 </p>

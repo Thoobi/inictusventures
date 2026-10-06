@@ -1,6 +1,8 @@
 import { apiClient } from "@/apiclient";
 import { BASE_URL, TEAMS_COLLECTION_ID } from "@/constant";
 import TeamsImageGrid from "@/components/dam/teamsImageGrid";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -114,6 +116,12 @@ async function fetchTeams(): Promise<TeamImage[]> {
 		return [];
 	}
 }
+
+export const metadata: Metadata = pageMetadata({
+	title: "Teams",
+	description: "Meet the talented teams behind DAM — the people who make Dance, Art and Music possible.",
+	path: "/dam/teams",
+});
 
 export default async function Teams() {
 	const images = await fetchTeams();

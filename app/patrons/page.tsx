@@ -4,6 +4,8 @@ import PatronsGrid, {
 	type PatreonCardData,
 } from "@/components/patrons/patronsGrid";
 import SupportUsSection from "@/components/patrons/supportUsSection";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 60; // Revalidate every 20 minutes to ensure we have up-to-date patreon information without excessive API calls
 
@@ -116,6 +118,12 @@ async function fetchpatrons(): Promise<PatreonCardData[]> {
 		return [];
 	}
 }
+
+export const metadata: Metadata = pageMetadata({
+	title: "Patrons",
+	description: "Meet the patrons who support Inistic Ventures, and find out how you can sponsor or donate to support creative talent.",
+	path: "/patrons",
+});
 
 export default async function patrons() {
 	const patrons = await fetchpatrons();

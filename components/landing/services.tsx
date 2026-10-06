@@ -36,9 +36,9 @@ export default function Services() {
         [ WHAT WE DO ]
       </span>
       <div className=" xl:w-1/2 max-md:flex max-md:justify-center max-md:items-center flex flex-col justify-start items-start py-2">
-        <h1 className="text-8xl max-md:text-6xl text-center tracking-[-0.05em] font-bold text-red-700 mb-4">
+        <h2 className="text-8xl max-md:text-6xl text-center tracking-[-0.05em] font-bold text-red-700 mb-4">
           OUR SERVICES
-        </h1>
+        </h2>
       </div>
       <div className="grid xl:grid-cols-4 md:grid-cols-2 max-md:grid-cols-1 max-md:pt-5 max-md:pb-5 gap-4 pt-20 pb-10">
         {servicesData.map((service) => {
@@ -47,9 +47,9 @@ export default function Services() {
               key={service.id}
               className="flex w-full flex-col group rounded-[15px] relative max-md:rounded-lg xl:justify-between gap-5 px-3 xl:min-h-110 md:min-h-140 min-h-100 xl:bg-gray-100 pt-8 max-md:pt-5 pb-5 text-left transition-all duration-300 xl:hover:bg-red-700 bg-red-700"
             >
-              <h2 className="md:text-3xl text-2xl tracking-[-0.03em] uppercase font-bold transition-all duration-300 md:group-hover:text-opacity-80 md:group-hover:text-white xl:text-black text-white">
+              <h3 className="md:text-3xl text-2xl tracking-[-0.03em] uppercase font-bold transition-all duration-300 md:group-hover:text-opacity-80 md:group-hover:text-white xl:text-black text-white">
                 {service.label}
-              </h2>
+              </h3>
               <p className="xl:hidden text-base max-md:text-sm font-medium xl:text-black text-white  md:group-hover:text-white max-md:max-h-none max-md:opacity-100 max-md:text-white">
                 {service.content}
               </p>

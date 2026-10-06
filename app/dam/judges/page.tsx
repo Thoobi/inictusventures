@@ -1,6 +1,8 @@
 import { apiClient } from "@/apiclient";
 import { JUDGES_COLLECTION_ID, BASE_URL } from "@/constant";
 import JudgesByYearGrid from "@/components/dam/judgesByYearGrid";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -116,6 +118,12 @@ async function fetchJudges(): Promise<JudgesByYear> {
     return {};
   }
 }
+
+export const metadata: Metadata = pageMetadata({
+	title: "Judges",
+	description: "Meet the distinguished panel of DAM judges across dance, art and music, year by year.",
+	path: "/dam/judges",
+});
 
 export default async function Judges() {
   const judgesByYear = await fetchJudges();

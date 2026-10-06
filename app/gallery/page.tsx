@@ -2,6 +2,8 @@
 import Image from "next/image";
 import { apiClient } from "@/apiclient";
 import { COLLECTION_ID, BASE_URL } from "@/constant";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 60; // Revalidate every 20 minuted
 
@@ -53,6 +55,12 @@ async function fetchGalleryImages(): Promise<GalleryImage[]> {
     return [];
   }
 }
+
+export const metadata: Metadata = pageMetadata({
+	title: "Gallery",
+	description: "Explore the Inistic Ventures gallery — photography and artwork from our productions, events and talented artists.",
+	path: "/gallery",
+});
 
 export default async function Gallery() {
   const images = await fetchGalleryImages();
