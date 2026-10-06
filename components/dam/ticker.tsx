@@ -15,7 +15,7 @@ export default function Ticker() {
   const repeated = [...items, ...items];
 
   return (
-    <div className="bg-red-800 overflow-hidden py-3 whitespace-nowrap">
+    <div aria-hidden="true" className="bg-red-800 overflow-hidden py-3 whitespace-nowrap">
       <div
         className="inline-block animate-ticker"
         style={{

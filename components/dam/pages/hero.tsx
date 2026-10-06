@@ -63,8 +63,8 @@ export default function Hero() {
 				</div>
 			</div>
 
-			{/* RIGHT — collage */}
-			<div className="relative overflow-hidden min-h-100">
+			{/* RIGHT — collage (decorative) */}
+			<div aria-hidden="true" className="relative overflow-hidden min-h-100">
 				{/* Cranberries vinyl — main centrepiece */}
 				<div
 					className="absolute rounded-full"
@@ -79,7 +79,7 @@ export default function Hero() {
 				>
 					<Image
 						src="/dam/03.png"
-						alt="Vinyl Record"
+						alt=""
 						width={600}
 						height={600}
 						className="w-full rounded-full animate-vinyl"
@@ -101,7 +101,7 @@ export default function Hero() {
 				>
 					<Image
 						src="/dam/02.png"
-						alt="Microphone"
+						alt=""
 						width={300}
 						height={300}
 						className="w-full"
@@ -121,7 +121,7 @@ export default function Hero() {
 				>
 					<Image
 						src="/dam/04.png"
-						alt="Music Note"
+						alt=""
 						width={200}
 						height={200}
 						className="w-full"
@@ -143,7 +143,7 @@ export default function Hero() {
 				>
 					<Image
 						src="/dam/05.png"
-						alt="Film Strip"
+						alt=""
 						width={300}
 						height={500}
 						className="w-full rounded"

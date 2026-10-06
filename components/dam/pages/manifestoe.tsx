@@ -3,6 +3,7 @@ export default function Manifesto() {
     <section className="py-40 px-16 text-center relative overflow-hidden">
       {/* Glow */}
       <div
+        aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           background:

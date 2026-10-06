@@ -13,7 +13,7 @@ export default function Intro() {
       <div className="relative bg-[#0f0c09] overflow-hidden min-h-100">
         <Image
           src="/dam/01.jpg"
-          alt="Orchestra"
+          alt=""
           width={900}
           height={300}
           className="absolute bottom-[-5%] left-[0%] w-[110%] opacity-[0.15] invert pointer-events-none"
@@ -21,7 +21,7 @@ export default function Intro() {
         <div className="absolute inset-0 flex items-center justify-center p-16">
           <Image
             src="/dam/07.png"
-            alt="Vintage TVs"
+            alt=""
             width={400}
             height={700}
             className="w-[55%] max-w-85 grayscale-[0.3] contrast-110 opacity-85"

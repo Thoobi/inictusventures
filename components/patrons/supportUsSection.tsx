@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { IoCloseOutline } from "react-icons/io5";
+import { useEffect, useId, useRef, useState } from "react";
+import Modal from "@/components/shared/modal";
 
 const supportTypes = [
 	{ label: "Inistic Meets the Needy", value: "inistic-meets-the-needy" },
@@ -43,18 +43,53 @@ function SelectCard({
 	hasError?: boolean;
 }) {
 	const [isOpen, setIsOpen] = useState(false);
+	const containerRef = useRef<HTMLDivElement>(null);
+	const id = useId();
+	const labelId = `${id}-label`;
+	const buttonId = `${id}-button`;
+	const listId = `${id}-list`;
 	const selectedOption = options.find(
 		(option) => option.value === selectedValue,
 	);
 
+	useEffect(() => {
+		if (!isOpen) {
+			return;
+		}
+
+		const onPointerDown = (event: PointerEvent) => {
+			if (!containerRef.current?.contains(event.target as Node)) {
+				setIsOpen(false);
+			}
+		};
+		document.addEventListener("pointerdown", onPointerDown);
+		return () => document.removeEventListener("pointerdown", onPointerDown);
+	}, [isOpen]);
+
 	return (
-		<div className="relative">
-			<label className="mb-2 block text-sm font-semibold text-black">
+		<div
+			className="relative"
+			ref={containerRef}
+			onKeyDown={(event) => {
+				if (event.key === "Escape" && isOpen) {
+					// Don't let Escape also close the surrounding modal.
+					event.stopPropagation();
+					event.preventDefault();
+					setIsOpen(false);
+					document.getElementById(buttonId)?.focus();
+				}
+			}}
+		>
+			<span id={labelId} className="mb-2 block text-sm font-semibold text-black">
 				{label}
-			</label>
+			</span>
 
 			<button
 				type="button"
+				id={buttonId}
+				aria-labelledby={`${labelId} ${buttonId}`}
+				aria-expanded={isOpen}
+				aria-controls={listId}
 				onClick={() => setIsOpen((prev) => !prev)}
 				className={`flex w-full items-center justify-between rounded-xl border bg-white px-4 py-3 text-left text-sm text-black transition-colors hover:border-red-300 ${
 					hasError ? "border-red-600" : "border-gray-300"
@@ -67,11 +102,14 @@ function SelectCard({
 				>
 					{selectedOption?.label ?? placeholder ?? "Select an option"}
 				</span>
-				<span className="text-lg text-gray-600">▾</span>
+				<span aria-hidden="true" className="text-lg text-gray-600">▾</span>
 			</button>
 
 			{isOpen && (
-				<div className="absolute left-0 right-0 z-20 mt-2 rounded-2xl border border-red-100 bg-white p-3 shadow-xl">
+				<div
+					id={listId}
+					className="absolute left-0 right-0 z-20 mt-2 rounded-2xl border border-red-100 bg-white p-3 shadow-xl"
+				>
 					<div className="grid gap-3">
 						{options.map((option) => {
 							const isSelected = option.value === selectedValue;
@@ -80,9 +118,11 @@ function SelectCard({
 								<button
 									type="button"
 									key={option.value}
+									aria-pressed={isSelected}
 									onClick={() => {
 										onChange(option.value);
 										setIsOpen(false);
+										document.getElementById(buttonId)?.focus();
 									}}
 									className={`flex items-center justify-between rounded-xl border border-transparent px-4 py-3 text-left text-sm transition-colors ${
 										isSelected
@@ -94,7 +134,10 @@ function SelectCard({
 										{option.label}
 									</span>
 									{isSelected ? (
-										<span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-700 text-xs font-bold text-white">
+										<span
+											aria-hidden="true"
+											className="flex h-5 w-5 items-center justify-center rounded-full bg-red-700 text-xs font-bold text-white"
+										>
 											✓
 										</span>
 									) : null}
@@ -126,6 +169,7 @@ function SupportForm({ onClose }: { onClose: () => void }) {
 	const [status, setStatus] = useState<FormStatus>("idle");
 	const [errorMessage, setErrorMessage] = useState("");
 	const [showTierError, setShowTierError] = useState(false);
+	const formId = useId();
 
 	const tierOptions = sponsorshipTiers[supportType];
 
@@ -202,11 +246,14 @@ function SupportForm({ onClose }: { onClose: () => void }) {
 
 	if (status === "success") {
 		return (
-			<div>
+			<div role="status">
 				<p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-700">
 					Thank you
 				</p>
-				<h2 className="mt-2 text-2xl font-bold font-mono text-black max-md:text-xl">
+				<h2
+					id="support-modal-title"
+					className="mt-2 text-2xl font-bold font-mono text-black max-md:text-xl"
+				>
 					We&apos;ve received your request
 				</h2>
 				<p className="mt-3 text-sm text-gray-700 font-mono">
@@ -239,7 +286,10 @@ function SupportForm({ onClose }: { onClose: () => void }) {
 				<p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-700">
 					Support Us
 				</p>
-				<h2 className="mt-2 text-2xl font-bold font-mono text-black max-md:text-xl">
+				<h2
+					id="support-modal-title"
+					className="mt-2 text-2xl font-bold font-mono text-black max-md:text-xl"
+				>
 					Choose the cause you want to support
 				</h2>
 				<p className="mt-2 text-sm text-gray-700 font-mono">
@@ -265,17 +315,22 @@ function SupportForm({ onClose }: { onClose: () => void }) {
 						hasError={showTierError}
 					/>
 					{showTierError && (
-						<p className="mt-2 text-xs text-red-600">
+						<p role="alert" className="mt-2 text-xs text-red-700">
 							Please select a sponsorship tier.
 						</p>
 					)}
 				</div>
 
 				<div>
-					<label className="mb-2 block text-sm font-semibold text-black">
+					<label
+						htmlFor={`${formId}-fullName`}
+						className="mb-2 block text-sm font-semibold text-black"
+					>
 						Full name *
 					</label>
 					<input
+						id={`${formId}-fullName`}
+						autoComplete="name"
 						type="text"
 						required
 						value={fullName}
@@ -285,10 +340,15 @@ function SupportForm({ onClose }: { onClose: () => void }) {
 				</div>
 
 				<div>
-					<label className="mb-2 block text-sm font-semibold text-black">
+					<label
+						htmlFor={`${formId}-email`}
+						className="mb-2 block text-sm font-semibold text-black"
+					>
 						Email *
 					</label>
 					<input
+						id={`${formId}-email`}
+						autoComplete="email"
 						type="email"
 						required
 						value={email}
@@ -298,10 +358,15 @@ function SupportForm({ onClose }: { onClose: () => void }) {
 				</div>
 
 				<div>
-					<label className="mb-2 block text-sm font-semibold text-black">
+					<label
+						htmlFor={`${formId}-phone`}
+						className="mb-2 block text-sm font-semibold text-black"
+					>
 						Phone number
 					</label>
 					<input
+						id={`${formId}-phone`}
+						autoComplete="tel"
 						type="tel"
 						value={phone}
 						onChange={(e) => setPhone(e.target.value)}
@@ -310,10 +375,15 @@ function SupportForm({ onClose }: { onClose: () => void }) {
 				</div>
 
 				<div>
-					<label className="mb-2 block text-sm font-semibold text-black">
+					<label
+						htmlFor={`${formId}-organisation`}
+						className="mb-2 block text-sm font-semibold text-black"
+					>
 						Organisation
 					</label>
 					<input
+						id={`${formId}-organisation`}
+						autoComplete="organization"
 						type="text"
 						value={organisation}
 						onChange={(e) => setOrganisation(e.target.value)}
@@ -322,10 +392,14 @@ function SupportForm({ onClose }: { onClose: () => void }) {
 				</div>
 
 				<div className="md:col-span-2">
-					<label className="mb-2 block text-sm font-semibold text-black">
+					<label
+						htmlFor={`${formId}-message`}
+						className="mb-2 block text-sm font-semibold text-black"
+					>
 						Message
 					</label>
 					<textarea
+						id={`${formId}-message`}
 						rows={4}
 						value={message}
 						onChange={(e) => setMessage(e.target.value)}
@@ -336,7 +410,9 @@ function SupportForm({ onClose }: { onClose: () => void }) {
 			</div>
 
 			{status === "error" && (
-				<p className="mt-4 text-sm text-red-600">{errorMessage}</p>
+				<p role="alert" className="mt-4 text-sm text-red-700">
+					{errorMessage}
+				</p>
 			)}
 
 			<button
@@ -352,28 +428,6 @@ function SupportForm({ onClose }: { onClose: () => void }) {
 
 export default function SupportUsSection() {
 	const [isOpen, setIsOpen] = useState(false);
-	const originalBodyOverflow = useRef<string | null>(null);
-
-	useEffect(() => {
-		if (!isOpen) {
-			return;
-		}
-
-		originalBodyOverflow.current = document.body.style.overflow;
-		document.body.style.overflow = "hidden";
-
-		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key === "Escape") {
-				setIsOpen(false);
-			}
-		};
-		window.addEventListener("keydown", handleKeyDown);
-
-		return () => {
-			document.body.style.overflow = originalBodyOverflow.current ?? "";
-			window.removeEventListener("keydown", handleKeyDown);
-		};
-	}, [isOpen]);
 
 	return (
 		<>
@@ -381,39 +435,23 @@ export default function SupportUsSection() {
 				<button
 					type="button"
 					onClick={() => setIsOpen(true)}
+					aria-haspopup="dialog"
 					className="bg-linear-to-r from-red-700 to-black text-lg text-white font-bold py-2.5 max-md:py-2 max-md:px-5 px-8 rounded-lg hover:from-black hover:to-red-700 hover:scale-105 transition-all duration-300 ease-out max-md:text-sm cursor-pointer"
 				>
 					Sponsor us
 				</button>
 			</div>
 
-			{isOpen && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-					<button
-						type="button"
-						aria-label="Close modal"
-						onClick={() => setIsOpen(false)}
-						className="absolute inset-0 bg-black/40 backdrop-blur-xl"
-					/>
-					<div
-						role="dialog"
-						aria-modal="true"
-						className="relative z-10 w-full max-w-2xl rounded-2xl bg-white px-6 pt-12 pb-6 max-md:px-4"
-					>
-						<button
-							type="button"
-							onClick={() => setIsOpen(false)}
-							aria-label="Close"
-							className="absolute top-4 right-4 z-20 cursor-pointer text-gray-500 hover:text-gray-700 transition-colors"
-						>
-							<IoCloseOutline className="text-3xl" />
-						</button>
-						<div className="max-h-[80vh] overflow-y-auto pr-1">
-							<SupportForm onClose={() => setIsOpen(false)} />
-						</div>
-					</div>
+			<Modal
+				open={isOpen}
+				onClose={() => setIsOpen(false)}
+				labelledBy="support-modal-title"
+				className="max-w-2xl px-6 pt-12 pb-6 max-md:px-4"
+			>
+				<div className="max-h-[80vh] overflow-y-auto pr-1">
+					<SupportForm onClose={() => setIsOpen(false)} />
 				</div>
-			)}
+			</Modal>
 		</>
 	);
 }

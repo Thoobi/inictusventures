@@ -19,7 +19,7 @@ export const metadata: Metadata = pageMetadata({
 
 export default function Home() {
   return (
-    <main className="bg-dam-black min-h-screen">
+    <div className="bg-dam-black min-h-screen">
       {/* <Cursor /> */}
       <ScrollReveal />
       <Hero />
@@ -29,6 +29,6 @@ export default function Home() {
       <Events />
       <Manifesto />
       <VinylStrip />
-    </main>
+    </div>
   );
 }

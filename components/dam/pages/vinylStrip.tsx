@@ -30,7 +30,8 @@ export default function VinylStrip() {
           <div className="relative w-[70%] max-w-95 aspect-square">
             <Image
               src={v.src}
-              alt={v.title}
+              alt=""
+              sizes="(min-width: 768px) 35vw, 70vw"
               fill
               className="rounded-full object-cover vinyl-record"
               style={{
@@ -48,7 +49,7 @@ export default function VinylStrip() {
             >
               {v.title}
             </h3>
-            <p className="text-white/35 text-[0.6rem] tracking-[0.35em] uppercase mt-1">
+            <p className="text-white/70 text-[0.6rem] tracking-[0.35em] uppercase mt-1">
               {v.sub}
             </p>
           </div>

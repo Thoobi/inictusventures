@@ -82,7 +82,11 @@ export default function JudgesByYearGrid({
 										>
 											<Image
 												src={judgeImage.url}
-												alt={judgeName || "Judge"}
+												alt={
+													judgeName
+														? `${judgeName}${category ? `, ${category} judge` : ""}`
+														: "DAM judge"
+												}
 												width={600}
 												height={800}
 												onLoad={() =>

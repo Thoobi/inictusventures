@@ -119,6 +119,12 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={`${monaSans.variable} antialiased`}>
 				<JsonLd data={jsonLd} />
+				<a
+					href="#main-content"
+					className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:rounded-lg focus:bg-black focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-white"
+				>
+					Skip to content
+				</a>
 				<div className="fixed w-full z-50">
 					<NavPathChecker />
 				</div>
@@ -139,7 +145,9 @@ export default function RootLayout({
 					</ul>
 				</nav>
 
-				{children}
+				<main id="main-content" tabIndex={-1} className="outline-none">
+					{children}
+				</main>
 				<Footer />
 			</body>
 		</html>

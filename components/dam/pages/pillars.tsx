@@ -67,6 +67,7 @@ export default function Pillars() {
           >
             {/* Ghost letter */}
             <span
+              aria-hidden="true"
               className="absolute top-4 right-6 text-dam-cream/[0.05] leading-none select-none pointer-events-none"
               style={{ fontFamily: "Bebas Neue, sans-serif", fontSize: "6rem" }}
             >
@@ -76,7 +77,8 @@ export default function Pillars() {
             <div className="w-20 h-20 mb-8 relative">
               <Image
                 src={p.img}
-                alt={p.label}
+                alt=""
+                sizes="80px"
                 fill
                 className={`object-cover rounded ${p.imgClass}`}
               />

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const damLinks = [
@@ -13,7 +13,6 @@ const damLinks = [
 ];
 
 export default function DamNavbar() {
-	const router = useRouter();
 	const pathname = usePathname();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -28,23 +27,34 @@ export default function DamNavbar() {
 	useEffect(() => {
 		document.body.style.overflow = isMenuOpen ? "hidden" : "";
 
+		const onKeyDown = (event: KeyboardEvent) => {
+			if (event.key === "Escape") {
+				setIsMenuOpen(false);
+			}
+		};
+		if (isMenuOpen) {
+			window.addEventListener("keydown", onKeyDown);
+		}
+
 		return () => {
 			document.body.style.overflow = "";
+			window.removeEventListener("keydown", onKeyDown);
 		};
 	}, [isMenuOpen]);
 
 	return (
 		<>
-			<nav className="fixed top-0 bg-white border-b border-gray-100 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 md:px-12 md:py-3 md:mix-blend-difference">
+			<nav aria-label="DAM" className="fixed top-0 bg-white border-b border-gray-100 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 md:px-12 md:py-3 md:mix-blend-difference">
 				<Link
 					href="/dam"
 					className="font-bold text-2xl md:text-3xl font-mono tracking-widest text-dam-white"
 				>
 					<Image
 						src="/icon.png"
-						alt="DAM Logo"
+						alt="DAM home"
 						width={100}
 						height={100}
+						priority
 						className="w-12 h-12 md:w-12 md:h-12 object-contain"
 					/>
 				</Link>
@@ -54,6 +64,7 @@ export default function DamNavbar() {
 						<li key={link.href}>
 							<Link
 								href={link.href}
+								aria-current={isActiveLink(link.href) ? "page" : undefined}
 								className={`relative font-semibold text-[0.9rem] tracking-[-0.04em] uppercase no-underline transition-opacity ${
 									isActiveLink(link.href)
 										? "text-red-700"
@@ -91,8 +102,9 @@ export default function DamNavbar() {
 					type="button"
 					className="md:hidden flex flex-col justify-center items-center w-7 h-5 relative z-60"
 					onClick={() => setIsMenuOpen((prev) => !prev)}
-					aria-label="Toggle DAM menu"
+					aria-label={isMenuOpen ? "Close menu" : "Open menu"}
 					aria-expanded={isMenuOpen}
+					aria-controls="dam-mobile-menu"
 				>
 					<span
 						className={`w-7 h-0.5 bg-black rounded-full transition-all duration-300 absolute ${
@@ -119,7 +131,10 @@ export default function DamNavbar() {
 				className={`md:hidden fixed top-0 left-0 z-50 h-screen w-72 max-w-[86vw] bg-white border-r border-r-gray-300 px-6 pt-20 pb-8 flex flex-col gap-6 transition-transform duration-300 ease-out ${
 					isMenuOpen ? "translate-x-0" : "-translate-x-full"
 				}`}
-				aria-hidden={!isMenuOpen}
+				id="dam-mobile-menu"
+				aria-label="DAM menu"
+				// inert hides the closed menu from screen readers and keyboard focus
+				inert={!isMenuOpen}
 			>
 				<div className="mb-2 flex justify-start">
 					<Link
@@ -129,7 +144,7 @@ export default function DamNavbar() {
 					>
 						<Image
 							src="/icon.png"
-							alt="DAM Logo"
+							alt="DAM home"
 							width={100}
 							height={100}
 							className="w-14 h-14 object-contain"
@@ -142,6 +157,7 @@ export default function DamNavbar() {
 						<li key={link.href}>
 							<Link
 								href={link.href}
+								aria-current={isActiveLink(link.href) ? "page" : undefined}
 								className={`text-4xl tracking-[-0.06em] uppercase font-semibold ${
 									isActiveLink(link.href)
 										? "text-red-700"

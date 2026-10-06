@@ -67,7 +67,7 @@ export default async function Manifesteos() {
 
   return (
     <div className="flex flex-col items-end py-20 max-md:py-10 max-md:w-full font-mono bg-linear">
-      <span className="text-sm max-md:text-xs font-bold tracking-[-0.02em] text-gray-400 mb-3 uppercase px-12 max-md:px-5">
+      <span className="text-sm max-md:text-xs font-bold tracking-[-0.02em] text-gray-600 mb-3 uppercase px-12 max-md:px-5">
         [ Collaborations ]
       </span>
       <div className="xl:w-[50%] flex flex-col justify-start items-start px-12 max-md:px-5">
@@ -81,7 +81,7 @@ export default async function Manifesteos() {
             <Image
               key={index}
               src={img.url}
-              alt={img.alt}
+              alt={img.alt || `Partner logo ${index + 1}`}
               width={250}
               height={150}
               className="h-auto xl:w-35 lg:w-25 w-20 object-contain"

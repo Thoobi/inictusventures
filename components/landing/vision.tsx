@@ -51,10 +51,8 @@ export default function Vision() {
                 <h3 className="text-[40px] max-md:text-3xl tracking-[-0.03em] uppercase font-bold group-hover:text-opacity-80 transition-all duration-300">
                   {item.label}
                 </h3>
-                <p className="xl:hidden text-lg text-black overflow-hidden">
-                  {item.content}
-                </p>
-                <p className="text-lg text-black max-h-0 xl:group-hover:max-h-96 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out overflow-hidden">
+                {/* Always visible below xl; revealed on hover from xl up */}
+                <p className="text-lg text-black overflow-hidden transition-all duration-500 ease-in-out xl:max-h-0 xl:opacity-0 xl:group-hover:max-h-96 xl:group-hover:opacity-100">
                   {item.content}
                 </p>
               </div>

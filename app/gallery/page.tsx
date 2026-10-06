@@ -81,7 +81,7 @@ export default async function Gallery() {
         {/* Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
           {images &&
-            images.map((image) => {
+            images.map((image, index) => {
               return (
                 <div
                   key={image.id}
@@ -89,7 +89,11 @@ export default async function Gallery() {
                 >
                   <Image
                     src={image.url}
-                    alt={image.alt || image.title || "Gallery Image"}
+                    alt={
+                      image.alt ||
+                      image.title ||
+                      `Inistic Ventures gallery photo ${index + 1}`
+                    }
                     fill
                     sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                     className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"

@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
+import Modal from "@/components/shared/modal";
 
 type DropdownOption = {
 	label: string;
@@ -27,6 +28,10 @@ function CustomDropdown({
 }: CustomDropdownProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
+	const id = useId();
+	const labelId = `${id}-label`;
+	const buttonId = `${id}-button`;
+	const listId = `${id}-list`;
 
 	useEffect(() => {
 		const onClickOutside = (event: MouseEvent) => {
@@ -50,12 +55,25 @@ function CustomDropdown({
 	);
 
 	return (
-		<div className="w-full" ref={containerRef}>
-			<label className="mb-2 block text-sm font-semibold text-black">
+		<div
+			className="w-full"
+			ref={containerRef}
+			onKeyDown={(event) => {
+				if (event.key === "Escape" && isOpen) {
+					setIsOpen(false);
+					document.getElementById(buttonId)?.focus();
+				}
+			}}
+		>
+			<span id={labelId} className="mb-2 block text-sm font-semibold text-black">
 				{label}
-			</label>
+			</span>
 			<button
 				type="button"
+				id={buttonId}
+				aria-labelledby={`${labelId} ${buttonId}`}
+				aria-expanded={isOpen}
+				aria-controls={listId}
 				onClick={() => setIsOpen((prev) => !prev)}
 				className="flex w-full cursor-pointer items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-3 text-left text-sm text-black transition-colors hover:border-red-700"
 			>
@@ -65,6 +83,7 @@ function CustomDropdown({
 					{selectedOption?.label || placeholder}
 				</span>
 				<span
+					aria-hidden="true"
 					className={`text-xl transition-transform ${isOpen ? "rotate-180" : ""}`}
 				>
 					<IoMdArrowDropdown />
@@ -73,14 +92,16 @@ function CustomDropdown({
 
 			{isOpen && (
 				<div className="relative">
-					<ul className="absolute z-30 mt-2 max-h-56 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
+					<ul id={listId} className="absolute z-30 mt-2 max-h-56 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
 						{options.map((option) => (
 							<li key={option.value}>
 								<button
 									type="button"
+									aria-pressed={value === option.value}
 									onClick={() => {
 										onChange(option.value);
 										setIsOpen(false);
+										document.getElementById(buttonId)?.focus();
 									}}
 									className={`w-full px-4 py-2 text-left text-sm transition-colors ${
 										value === option.value
@@ -99,6 +120,7 @@ function CustomDropdown({
 			{required && !value && (
 				<input
 					required
+					aria-label={label}
 					className="sr-only"
 					value={value}
 					onChange={() => undefined}
@@ -142,6 +164,11 @@ export default function RegistrationForm() {
 	const [musicType, setMusicType] = useState("");
 	const [hasReadGuidelines, setHasReadGuidelines] = useState(false);
 	const [isGuidelinesModalOpen, setIsGuidelinesModalOpen] = useState(false);
+	const formId = useId();
+	const [status, setStatus] = useState<
+		"idle" | "submitting" | "success" | "error"
+	>("idle");
+	const [errorMessage, setErrorMessage] = useState("");
 
 	const isMusicCategory = category === "music";
 
@@ -152,33 +179,75 @@ export default function RegistrationForm() {
 		}
 	};
 
-	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
 		if (!hasReadGuidelines) {
 			setIsGuidelinesModalOpen(true);
 			return;
 		}
+
+		setStatus("submitting");
+		setErrorMessage("");
+
+		try {
+			const response = await fetch("/api/dam/registration", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					fullName,
+					email,
+					phone,
+					address,
+					source,
+					category,
+					musicType,
+					whyJoin,
+				}),
+			});
+
+			if (!response.ok) {
+				const data = await response.json().catch(() => null);
+				throw new Error(
+					data?.error || "Something went wrong. Please try again.",
+				);
+			}
+
+			setStatus("success");
+		} catch (error) {
+			setErrorMessage(
+				error instanceof Error
+					? error.message
+					: "Something went wrong. Please try again.",
+			);
+			setStatus("error");
+		}
 	};
+
+	if (status === "success") {
+		return (
+			<div
+				role="status"
+				className="w-full rounded-xl border border-gray-200 bg-white p-5 md:p-8"
+			>
+				<p className="text-xs font-semibold uppercase tracking-[0.2em] text-red-700">
+					Registration received
+				</p>
+				<h2 className="mt-2 text-2xl font-bold font-mono text-black">
+					You&apos;re in, {fullName.split(" ").slice(-1)[0] || fullName}!
+				</h2>
+				<p className="mt-3 text-sm text-gray-700">
+					Thanks for registering for the DAM Street Battle. We&apos;ll
+					reach out to you at {email} with the next steps.
+				</p>
+			</div>
+		);
+	}
 
 	const handleGuidelinesClick = () => {
 		setHasReadGuidelines(true);
 		setIsGuidelinesModalOpen(false);
 	};
-
-	useEffect(() => {
-		if (!isGuidelinesModalOpen) {
-			document.body.style.overflow = "";
-			return;
-		}
-
-		const previousOverflow = document.body.style.overflow;
-		document.body.style.overflow = "hidden";
-
-		return () => {
-			document.body.style.overflow = previousOverflow;
-		};
-	}, [isGuidelinesModalOpen]);
 
 	return (
 		<form
@@ -187,10 +256,15 @@ export default function RegistrationForm() {
 		>
 			<div className="grid grid-cols-1 gap-5 md:grid-cols-2">
 				<div className="md:col-span-2">
-					<label className="mb-2 block text-sm font-semibold text-black">
+					<label
+						htmlFor={`${formId}-fullName`}
+						className="mb-2 block text-sm font-semibold text-black"
+					>
 						Full Name (Surname first)
 					</label>
 					<input
+						id={`${formId}-fullName`}
+						autoComplete="name"
 						type="text"
 						value={fullName}
 						onChange={(event) => setFullName(event.target.value)}
@@ -201,10 +275,15 @@ export default function RegistrationForm() {
 				</div>
 
 				<div>
-					<label className="mb-2 block text-sm font-semibold text-black">
+					<label
+						htmlFor={`${formId}-email`}
+						className="mb-2 block text-sm font-semibold text-black"
+					>
 						Email
 					</label>
 					<input
+						id={`${formId}-email`}
+						autoComplete="email"
 						type="email"
 						value={email}
 						onChange={(event) => setEmail(event.target.value)}
@@ -215,10 +294,15 @@ export default function RegistrationForm() {
 				</div>
 
 				<div>
-					<label className="mb-2 block text-sm font-semibold text-black">
+					<label
+						htmlFor={`${formId}-phone`}
+						className="mb-2 block text-sm font-semibold text-black"
+					>
 						Phone
 					</label>
 					<input
+						id={`${formId}-phone`}
+						autoComplete="tel"
 						type="tel"
 						value={phone}
 						onChange={(event) => setPhone(event.target.value)}
@@ -229,10 +313,15 @@ export default function RegistrationForm() {
 				</div>
 
 				<div className="md:col-span-2">
-					<label className="mb-2 block text-sm font-semibold text-black">
+					<label
+						htmlFor={`${formId}-address`}
+						className="mb-2 block text-sm font-semibold text-black"
+					>
 						Address
 					</label>
 					<input
+						id={`${formId}-address`}
+						autoComplete="street-address"
 						type="text"
 						value={address}
 						onChange={(event) => setAddress(event.target.value)}
@@ -274,10 +363,14 @@ export default function RegistrationForm() {
 				)}
 
 				<div className="md:col-span-2">
-					<label className="mb-2 block text-sm font-semibold text-black">
+					<label
+						htmlFor={`${formId}-whyJoin`}
+						className="mb-2 block text-sm font-semibold text-black"
+					>
 						Why do you want to be a part of DAM?
 					</label>
 					<textarea
+						id={`${formId}-whyJoin`}
 						value={whyJoin}
 						onChange={(event) => setWhyJoin(event.target.value)}
 						required
@@ -290,12 +383,13 @@ export default function RegistrationForm() {
 					<button
 						type="button"
 						onClick={() => setIsGuidelinesModalOpen(true)}
+						aria-haspopup="dialog"
 						className="text-sm font-semibold text-red-700 underline underline-offset-2 transition-colors hover:text-black"
 					>
 						Read the DAM registration guidelines
 					</button>
 					{!hasReadGuidelines && (
-						<p className="mt-2 text-xs text-gray-600">
+						<p className="mt-2 text-xs text-gray-700">
 							Please click the link in the modal before submitting
 							your form.
 						</p>
@@ -303,65 +397,70 @@ export default function RegistrationForm() {
 				</div>
 			</div>
 
+			{status === "error" && (
+				<p role="alert" className="mt-4 text-sm text-red-700">
+					{errorMessage}
+				</p>
+			)}
+
 			<button
 				type="submit"
-				className="mt-6 w-full rounded-lg bg-red-800 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-black"
+				disabled={status === "submitting"}
+				className="mt-6 w-full rounded-lg bg-red-800 px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
 			>
-				Submit
+				{status === "submitting" ? "Submitting..." : "Submit"}
 			</button>
 
-			{isGuidelinesModalOpen && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-					<div className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
-						<button
-							type="button"
-							onClick={() => setIsGuidelinesModalOpen(false)}
-							className="absolute right-4 top-4 text-2xl leading-none text-gray-500 transition-colors hover:text-black"
-							aria-label="Close modal"
+			<Modal
+				open={isGuidelinesModalOpen}
+				onClose={() => setIsGuidelinesModalOpen(false)}
+				labelledBy="guidelines-modal-title"
+				className="max-w-lg p-6 shadow-2xl"
+			>
+				<div className="pr-8">
+					<p className="mb-2 text-xs font-semibold uppercase tracking-widest text-red-700">
+						Before you continue
+					</p>
+					<h2
+						id="guidelines-modal-title"
+						className="text-2xl font-bold text-black"
+					>
+						Please follow our Instagram
+					</h2>
+				</div>
+
+				<div className="mt-6 flex flex-col items-center gap-5 md:flex-row md:items-center md:justify-between">
+					<div className="flex flex-col items-center gap-4">
+						{/* eslint-disable-next-line @next/next/no-img-element -- external QR service, not worth routing through the image optimizer */}
+						<img
+							src={QR_CODE_URL}
+							alt="QR code linking to the DAM Instagram page"
+							width={144}
+							height={144}
+							className="h-36 w-36 rounded-lg border border-gray-200 bg-white p-2"
+						/>
+					</div>
+
+					<div className="flex-1 text-center md:text-left">
+						<p className="text-sm leading-6 text-gray-700">
+							Please follow our page before continuing. Click the
+							link below to open our Instagram, then return here
+							and continue with your registration.
+						</p>
+
+						<a
+							href={INSTAGRAM_URL}
+							target="_blank"
+							rel="noreferrer noopener"
+							onClick={handleGuidelinesClick}
+							className="mt-4 inline-flex items-center justify-center rounded-lg bg-red-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-black"
 						>
-							×
-						</button>
-
-						<div className="pr-4">
-							<p className="mb-2 text-xs font-semibold uppercase tracking-widest text-red-700">
-								Before you continue
-							</p>
-							<h3 className="text-2xl font-bold text-black">
-								Please follow our Instagram
-							</h3>
-						</div>
-
-						<div className="mt-6 flex flex-col items-center gap-5 md:flex-row md:items-center md:justify-between">
-							<div className="flex flex-col items-center gap-4">
-								<img
-									src={QR_CODE_URL}
-									alt="QR code for Instagram link"
-									className="h-36 w-36 rounded-lg border border-gray-200 bg-white p-2"
-								/>
-							</div>
-
-							<div className="flex-1 text-center md:text-left">
-								<p className="text-sm leading-6 text-gray-700">
-									Please follow our page before continuing.
-									Click the link below to open our Instagram,
-									then return here and continue with your
-									registration.
-								</p>
-
-								<a
-									href={INSTAGRAM_URL}
-									target="_blank"
-									rel="noreferrer noopener"
-									onClick={handleGuidelinesClick}
-									className="mt-4 inline-flex items-center justify-center rounded-lg bg-red-700 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-black"
-								>
-									Follow our page on Instagram
-								</a>
-							</div>
-						</div>
+							Follow our page on Instagram
+							<span className="sr-only"> (opens in a new tab)</span>
+						</a>
 					</div>
 				</div>
-			)}
+			</Modal>
 		</form>
 	);
 }

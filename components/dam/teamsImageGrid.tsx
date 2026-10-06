@@ -52,7 +52,7 @@ export default function TeamsImageGrid({ images }: TeamsImageGridProps) {
 						>
 							<Image
 								src={image.url as string}
-								alt={image.alt || "Team image"}
+								alt={image.alt || image.name || "DAM team member"}
 								width={600}
 								height={800}
 								onLoad={() => handleImageLoad(index)}

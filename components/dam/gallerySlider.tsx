@@ -129,17 +129,17 @@ export default function DamGallerySlider({ groups }: DamGallerySliderProps) {
 								<NextArrow slidesToShow={slidesToShow} />
 							}
 						>
-							{group.images.map((image) => (
+							{group.images.map((image, index) => (
 								<div key={image.id} className="px-2">
 									<div className="group relative h-100 overflow-hidden bg-gray-200 rounded-lg">
 										<Image
 											src={image.url}
 											alt={
 												image.alt ||
-												image.title ||
-												"DAM Gallery Image"
+												`DAM ${group.year} photo ${index + 1}`
 											}
 											fill
+											sizes="(min-width: 1024px) 25vw, 100vw"
 											className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
 										/>
 									</div>

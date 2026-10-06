@@ -52,13 +52,13 @@ const events = [
 export default function Events() {
   return (
     <section className="bg-dam-cream text-dam-black py-28 px-16 max-md:px-5 max-md:py-5 relative overflow-hidden">
-      {/* Ghost word */}
+      {/* Ghost word: generated content so it stays out of the a11y tree */}
       <span
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#0a0804]/4 whitespace-nowrap pointer-events-none select-none text-[18rem] max-md:text-[7rem]"
+        aria-hidden="true"
+        data-word="EVENTS"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#0a0804]/4 whitespace-nowrap pointer-events-none select-none text-[18rem] max-md:text-[7rem] before:content-[attr(data-word)]"
         style={{ fontFamily: "Bebas Neue, sans-serif" }}
-      >
-        EVENTS
-      </span>
+      />
 
       <p className="text-dam-red text-[0.6rem] tracking-[0.5em] uppercase mb-4 reveal">
         / Upcoming
@@ -80,7 +80,7 @@ export default function Events() {
         {events.map((ev) => (
           <div
             key={ev.title}
-            className="event-card bg-dam-black text-dam-cream p-10 max-md:py-5 max-md:px-0 relative overflow-hidden cursor-none reveal"
+            className="event-card bg-dam-black text-dam-cream p-10 max-md:py-5 max-md:px-0 relative overflow-hidden reveal"
             style={{ transitionDelay: ev.delay }}
           >
             <p

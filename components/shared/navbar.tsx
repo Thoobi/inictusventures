@@ -5,7 +5,7 @@ import Image from "next/image";
 import Logo from "../../public/assets/logo.png";
 // import Button from "../custom/button";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Mobile sidebar stagger timings (ms)
 const STAGGER_IN_OFFSET = 150;
@@ -23,12 +23,27 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  useEffect(() => {
+    if (!isMenuOpen) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isMenuOpen]);
+
   return (
-    <nav className="flex flex-row items-center w-full justify-between bg-white border-b border-gray-200 font-mono px-8 max-md:pr-5 max-md:pl-2">
+    <nav aria-label="Main" className="flex flex-row items-center w-full justify-between bg-white border-b border-gray-200 font-mono px-8 max-md:pr-5 max-md:pl-2">
       <Link href={"/"} className="">
         <Image
           src={Logo}
-          alt="inistic Logo"
+          alt="Inistic Ventures home"
+          priority
           width={100}
           height={100}
           className="w-32 h-auto object-cover max-md:w-30"
@@ -41,16 +56,17 @@ export default function Navbar() {
             <li key={link.href} className="group relative">
               <Link
                 href={link.href}
+                aria-current={pathname === link.href ? "page" : undefined}
                 className={`text-sm font-medium ${pathname === link.href && "font-bold"}`}
               >
                 {link.name}
               </Link>
 
-              <span className="absolute w-px group-hover:bg-black/70 left-0 group-hover:duration-500 group-hover:w-full py-px -bottom-[0.5px]" />
+              <span aria-hidden="true" className="absolute w-px group-hover:bg-black/70 left-0 group-hover:duration-500 group-hover:w-full py-px -bottom-[0.5px]" />
 
               {/* Active Link Underline */}
               {pathname === link.href && (
-                <span className="absolute w-full bg-black left-0 py-px -bottom-[0.5px]" />
+                <span aria-hidden="true" className="absolute w-full bg-black left-0 py-px -bottom-[0.5px]" />
               )}
             </li>
           ))}
@@ -59,8 +75,11 @@ export default function Navbar() {
 
       <button
         className="lg:hidden flex flex-col justify-center items-center w-6 h-5 z-50 relative"
+        type="button"
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        aria-label="Toggle menu"
+        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        aria-expanded={isMenuOpen}
+        aria-controls="mobile-menu"
       >
         <span
           className={`w-6 h-0.5 bg-black transition-all rounded-full duration-300 absolute ${
@@ -92,7 +111,9 @@ export default function Navbar() {
             ? "0ms"
             : `${navbarLinks.length * STAGGER_OUT_STEP}ms`,
         }}
-        aria-hidden={!isMenuOpen}
+        id="mobile-menu"
+        // inert hides the closed menu from screen readers and keyboard focus
+        inert={!isMenuOpen}
       >
         <ul className="flex flex-col gap-6">
           {navbarLinks.map((link, index) => (
@@ -111,7 +132,7 @@ export default function Navbar() {
             >
               <Link
                 href={link.href}
-                tabIndex={isMenuOpen ? 0 : -1}
+                aria-current={pathname === link.href ? "page" : undefined}
                 className={`text-4xl uppercase font-bold tracking-[-0.05em] ${
                   pathname === link.href ? "text-red-700" : "text-black"
                 }`}

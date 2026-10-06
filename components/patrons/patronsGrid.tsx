@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { IoCloseOutline } from "react-icons/io5";
+import { useState } from "react";
+import Modal from "@/components/shared/modal";
 
 export interface PatreonCardData {
 	name: string;
@@ -62,22 +62,6 @@ export default function PatronsGrid({ patrons }: patronsGridProps) {
 	const [activePatreon, setActivePatreon] = useState<PatreonCardData | null>(
 		null,
 	);
-	const originalBodyOverflow = useRef<string | null>(null);
-
-	useEffect(() => {
-		if (activePatreon) {
-			if (originalBodyOverflow.current === null) {
-				originalBodyOverflow.current = document.body.style.overflow;
-			}
-			document.body.style.overflow = "hidden";
-		} else {
-			document.body.style.overflow = originalBodyOverflow.current ?? "";
-		}
-
-		return () => {
-			document.body.style.overflow = originalBodyOverflow.current ?? "";
-		};
-	}, [activePatreon]);
 
 	return (
 		<>
@@ -109,6 +93,7 @@ export default function PatronsGrid({ patrons }: patronsGridProps) {
 										<button
 											type="button"
 											onClick={() => setActivePatreon(patreon)}
+											aria-label={`Read more about ${patreon.name}`}
 											className="ml-1 cursor-pointer text-xs font-semibold text-white/80 underline underline-offset-2 hover:text-white font-mono transition-colors"
 										>
 											Read more
@@ -121,38 +106,29 @@ export default function PatronsGrid({ patrons }: patronsGridProps) {
 				})}
 			</div>
 
-			{activePatreon && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-					<button
-						type="button"
-						aria-label="Close modal"
-						onClick={() => setActivePatreon(null)}
-						className="absolute inset-0 backdrop-blur-xl"
-					/>
-					<div className="relative z-10 w-full max-w-4xl rounded-xl bg-white px-6 pt-14 pb-6">
-						<button
-							type="button"
-							onClick={() => setActivePatreon(null)}
-							className="absolute top-4 right-4 z-20 cursor-pointer text-gray-500 hover:text-gray-700 transition-colors"
+			<Modal
+				open={activePatreon !== null}
+				onClose={() => setActivePatreon(null)}
+				labelledBy="patron-modal-title"
+				className="max-w-4xl px-6 pt-14 pb-6 max-md:px-4"
+			>
+				{activePatreon && (
+					<div className="max-h-[80vh] overflow-y-auto pr-1">
+						<h3
+							id="patron-modal-title"
+							className="mb-4 text-3xl max-md:text-2xl font-bold font-mono text-black"
 						>
-							<IoCloseOutline className="text-4xl max-md:text-3xl" />
-						</button>
-						<div className="max-h-[80vh] overflow-y-auto pr-1">
-							<h3 className="mb-4 text-3xl max-md:text-2xl font-bold font-mono text-black">
-								{activePatreon.name}
-							</h3>
-							<div
-								className="text-black text-base leading-7 font-mono [&_p]:mb-4 [&_strong]:font-bold"
-								dangerouslySetInnerHTML={{
-									__html: formatPatreonAboutModal(
-										activePatreon.about,
-									),
-								}}
-							/>
-						</div>
+							{activePatreon.name}
+						</h3>
+						<div
+							className="text-black text-base leading-7 font-mono [&_p]:mb-4 [&_strong]:font-bold"
+							dangerouslySetInnerHTML={{
+								__html: formatPatreonAboutModal(activePatreon.about),
+							}}
+						/>
 					</div>
-				</div>
-			)}
+				)}
+			</Modal>
 		</>
 	);
 }
