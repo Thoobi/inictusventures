@@ -10,6 +10,8 @@ export interface DamRegistrationEmailData {
 
 const INSTAGRAM_URL = "https://www.instagram.com/dam.talent/";
 const CONTACT_EMAIL = "hello@inisticventures.com";
+const EVENT_DATE = "Saturday, November 21st, 2026";
+const EVENT_TIME = "10:00 AM";
 // Email clients need an absolute URL; this is served from /public.
 const LOGO_URL = `${SITE_URL}/assets/logo.png`;
 
@@ -83,7 +85,15 @@ export function damRegistrationEmail(data: DamRegistrationEmailData) {
 <tr><td style="padding:36px 32px 8px;">
 <p style="margin:0 0 6px;font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#b91c1c;">Registration confirmed</p>
 <h1 style="margin:0 0 16px;font-size:26px;line-height:1.25;color:#111111;">You're in, ${escapeHtml(firstName)}!</h1>
-<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#333333;">Thanks for registering for the <strong>DAM Street Battle</strong> — the discovery of new talent in dance, art and music. We've received your entry and our team will be in touch with the next steps, including the date, venue and what to prepare.</p>
+<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#333333;">Thanks for registering for the <strong>DAM Street Battle</strong> — the discovery of new talent in dance, art and music. We've received your entry and our team will be in touch with the next steps, including the venue and what to prepare.</p>
+</td></tr>
+
+<tr><td style="padding:8px 32px 16px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;border-radius:8px;">
+<tr><td style="padding:16px 20px 4px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#c8102e;">Save the date</td></tr>
+<tr><td style="padding:4px 20px 2px;font-size:20px;line-height:1.4;font-weight:700;color:#f2ead8;">${EVENT_DATE}</td></tr>
+<tr><td style="padding:0 20px 16px;font-size:15px;line-height:1.5;color:#f2ead8;opacity:0.85;">Starts at ${EVENT_TIME}</td></tr>
+</table>
 </td></tr>
 
 <tr><td style="padding:8px 32px 8px;">
@@ -133,7 +143,11 @@ You're receiving this because you registered at ${SITE_URL.replace(/^https?:\/\/
 	const text = [
 		`You're in, ${firstName}!`,
 		"",
-		"Thanks for registering for the DAM Street Battle — the discovery of new talent in dance, art and music. We've received your entry and our team will be in touch with the next steps, including the date, venue and what to prepare.",
+		"Thanks for registering for the DAM Street Battle — the discovery of new talent in dance, art and music. We've received your entry and our team will be in touch with the next steps, including the venue and what to prepare.",
+		"",
+		"Save the date",
+		`Date: ${EVENT_DATE}`,
+		`Time: ${EVENT_TIME}`,
 		"",
 		"Your details",
 		...rows.map(([label, value]) => `${label}: ${value}`),
