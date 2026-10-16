@@ -1,51 +1,11 @@
 const events = [
   {
-    date: "MAR 14, 2026",
-    title: "Bodies in Liminal Space",
-    meta: "Main Stage · 8:00 PM",
-    type: "Dance Performance",
+    date: "NOV 21, 2026",
+    title: "DAM Talent Show",
+    meta: "Gijasec School · 10:00 AM",
+    type: "Dance · Art · Music",
     color: "#e05c2a",
     delay: "0s",
-  },
-  {
-    date: "MAR 21, 2026",
-    title: "Vinyl & Visuals Night",
-    meta: "Gallery Hall · 7:00 PM",
-    type: "Music + Art",
-    color: "#d4a017",
-    delay: "0.1s",
-  },
-  {
-    date: "APR 03, 2026",
-    title: "The Unfinished Frame",
-    meta: "Gallery Wing B · All Day",
-    type: "Exhibition Opening",
-    color: "#4fb8c2",
-    delay: "0.2s",
-  },
-  {
-    date: "APR 12, 2026",
-    title: "Frequency Workshop",
-    meta: "Studio 3 · 10:00 AM",
-    type: "Music Workshop",
-    color: "#d4a017",
-    delay: "0.05s",
-  },
-  {
-    date: "APR 19, 2026",
-    title: "Open Floor: Spring Edition",
-    meta: "Main Stage · 6:00 PM",
-    type: "Open Showcase",
-    color: "#e05c2a",
-    delay: "0.15s",
-  },
-  {
-    date: "MAY 02, 2026",
-    title: "DAM Collective Night",
-    meta: "Full Venue · 9:00 PM",
-    type: "Multidisciplinary",
-    color: "#4fb8c2",
-    delay: "0.25s",
   },
 ];
 
@@ -76,11 +36,11 @@ export default function Events() {
         at DAM
       </h2>
 
-      <div className="grid grid-cols-3 gap-0.5 max-lg:grid-cols-1">
+      <div className="grid grid-cols-1 max-w-xl">
         {events.map((ev) => (
           <div
             key={ev.title}
-            className="event-card bg-dam-black text-dam-cream p-10 max-md:py-5 max-md:px-0 relative overflow-hidden reveal"
+            className="event-card bg-dam-black text-dam-cream p-10 max-md:p-6 relative overflow-hidden reveal"
             style={{ transitionDelay: ev.delay }}
           >
             <p
