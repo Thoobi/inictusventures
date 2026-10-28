@@ -9,8 +9,6 @@ export interface PatreonCardData {
 	name: string;
 	about: PortableTextBlock[];
 	slug: string;
-	email?: string;
-	phone?: string;
 	patreonImage: {
 		url: string;
 		fileId: string;

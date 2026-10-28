@@ -5,6 +5,8 @@ import Manifesteos from "@/components/landing/manifestoe";
 import type { Metadata } from "next";
 import { pageMetadata, SITE_DESCRIPTION } from "@/lib/seo";
 
+export const revalidate = 60; // Fallback for the sponsor logos; the Sanity webhook revalidates on publish
+
 export const metadata: Metadata = pageMetadata({
 	title: { absolute: "Inistic Ventures | Multimedia, Talent & Theatre Production" },
 	description: SITE_DESCRIPTION,
