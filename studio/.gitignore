@@ -1,0 +1,10 @@
+/node_modules
+/dist
+/.sanity
+schema.json
+.env*
+!.env.example
+
+# Raw Webflow snapshots and migration reports
+/migration/extracted
+/migration/reports

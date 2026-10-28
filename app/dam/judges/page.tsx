@@ -1,122 +1,27 @@
-import { apiClient } from "@/apiclient";
-import { JUDGES_COLLECTION_ID, BASE_URL } from "@/constant";
-import JudgesByYearGrid from "@/components/dam/judgesByYearGrid";
+import { sanityFetch } from "@/lib/sanity/client";
+import { JUDGES_QUERY } from "@/lib/sanity/queries";
+import JudgesByYearGrid, {
+  type JudgeCardData,
+} from "@/components/dam/judgesByYearGrid";
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
-interface JudgeImage {
-  fileId?: string;
-  url?: string;
-  alt?: string | null;
+interface JudgeWithYear extends JudgeCardData {
+  year: string;
 }
 
-interface Judge {
-  id: string;
-  fieldData?: {
-    name?: string;
-    slug?: string;
-    "judge-name"?: string;
-    "judge-image"?: JudgeImage;
-    category?: string;
-    [key: string]: unknown;
-  };
-}
-
-interface JudgesResponse {
-  items?: Judge[];
-  data?: Judge[];
-  pagination?: {
-    limit: number;
-    offset: number;
-    total: number;
-  };
-}
-
-interface CollectionOption {
-  id: string;
-  name: string;
-}
-
-interface CollectionField {
-  type?: string;
-  slug?: string;
-  validations?: {
-    options?: CollectionOption[];
-  };
-}
-
-interface JudgesCollectionResponse {
-  fields?: CollectionField[];
-}
-
-interface JudgeWithCategoryName extends Judge {
-  categoryName?: string;
-}
-
-interface JudgesByYear {
-  [year: string]: JudgeWithCategoryName[];
-}
+type JudgesByYear = Record<string, JudgeCardData[]>;
 
 async function fetchJudges(): Promise<JudgesByYear> {
-  try {
-    if (!JUDGES_COLLECTION_ID) {
-      console.warn("JUDGES_COLLECTION_ID is not set");
-      return {};
-    }
+  const judges = (await sanityFetch<JudgeWithYear[]>(JUDGES_QUERY)) ?? [];
 
-    if (!BASE_URL) {
-      console.warn("BASE_URL is not set");
-      return {};
-    }
-
-    const collectionEndpoint = `/collections/${JUDGES_COLLECTION_ID}`;
-    const collectionResponse =
-      await apiClient.get<JudgesCollectionResponse>(collectionEndpoint);
-    const categoryOptions =
-      collectionResponse?.fields?.find(
-        (field) => field.slug === "category" && field.type === "Option",
-      )?.validations?.options || [];
-    const categoryMap = new Map(
-      categoryOptions.map((option) => [option.id, option.name]),
-    );
-
-    const endpoint = `/collections/${JUDGES_COLLECTION_ID}/items`;
-    const response = await apiClient.get<JudgesResponse>(endpoint);
-    // console.log("Judges API response:", response);
-
-    const itemsArray = Array.isArray(response)
-      ? response
-      : response?.items || response?.data || [];
-
-    if (!Array.isArray(itemsArray)) {
-      return {};
-    }
-
-    // Group judges by year
-    const judgesByYear: JudgesByYear = {};
-    itemsArray.forEach((judge) => {
-      const year = judge.fieldData?.name || "Unknown";
-      const categoryId = judge.fieldData?.category;
-      const categoryName = categoryId
-        ? categoryMap.get(categoryId) || categoryId
-        : undefined;
-
-      if (!judgesByYear[year]) {
-        judgesByYear[year] = [];
-      }
-      judgesByYear[year].push({
-        ...judge,
-        categoryName,
-      });
-    });
-
-    return judgesByYear;
-  } catch (error) {
-    console.error("Error fetching judges:", error);
-    return {};
+  const judgesByYear: JudgesByYear = {};
+  for (const { year, ...judge } of judges) {
+    (judgesByYear[year || "Unknown"] ??= []).push(judge);
   }
+  return judgesByYear;
 }
 
 export const metadata: Metadata = pageMetadata({

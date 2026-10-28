@@ -3,30 +3,19 @@
 import Image from "next/image";
 import { useState } from "react";
 
-interface JudgeImage {
-	fileId?: string;
-	url?: string;
-	alt?: string | null;
-}
-
-interface JudgeFieldData {
-	name?: string;
-	slug?: string;
-	"judge-name"?: string;
-	"judge-image"?: JudgeImage;
+export interface JudgeCardData {
+	_id: string;
+	name: string;
 	category?: string;
-	[key: string]: unknown;
-}
-
-interface JudgeWithCategoryName {
-	id: string;
-	fieldData?: JudgeFieldData;
-	categoryName?: string;
+	image?: {
+		url?: string;
+		alt?: string | null;
+	};
 }
 
 interface JudgesByYearGridProps {
 	years: string[];
-	judgesByYear: Record<string, JudgeWithCategoryName[]>;
+	judgesByYear: Record<string, JudgeCardData[]>;
 }
 
 export default function JudgesByYearGrid({
@@ -57,19 +46,15 @@ export default function JudgesByYearGrid({
 					</h2>
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 						{(judgesByYear[year] || []).map((judge) => {
-							const judgeImage = judge.fieldData?.[
-								"judge-image"
-							] as JudgeImage | undefined;
-							const judgeName = judge.fieldData?.[
-								"judge-name"
-							] as string | undefined;
-							const category = judge.categoryName;
-							const imageKey = `${year}-${judge.id}`;
+							const judgeImage = judge.image;
+							const judgeName = judge.name;
+							const category = judge.category;
+							const imageKey = `${year}-${judge._id}`;
 							const isLoaded = loadedMap[imageKey] ?? false;
 
 							return (
 								<div
-									key={judge.id}
+									key={judge._id}
 									className="flex flex-col items-center text-center"
 								>
 									{judgeImage?.url && (

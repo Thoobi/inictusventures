@@ -144,15 +144,6 @@
   width: 100%;
 }
 
-/* Event card hover */
-.event-card {
-  transition: transform 0.35s ease;
-}
-
-.event-card:hover {
-  transform: translateY(-6px);
-}
-
 @keyframes slowspin {
   from {
     transform: rotate(0deg);
