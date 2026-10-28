@@ -5,7 +5,9 @@ export default defineCliConfig({
     projectId: process.env.SANITY_STUDIO_PROJECT_ID,
     dataset: process.env.SANITY_STUDIO_DATASET || "production",
   },
+  studioHost: "inistic",
   deployment: {
+    appId: "aps1eps77tezq35d48a18gnw",
     autoUpdates: true,
   },
   typegen: {
