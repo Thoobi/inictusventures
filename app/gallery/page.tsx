@@ -4,7 +4,7 @@ import { GALLERY_IMAGES_QUERY } from "@/lib/sanity/queries";
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 
-export const revalidate = 60; // Revalidate every 20 minuted
+export const revalidate = 60; // Fallback; the Sanity webhook revalidates on publish
 
 interface GalleryImage {
   id: string;

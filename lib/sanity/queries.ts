@@ -61,8 +61,6 @@ export const PATRONS_QUERY = defineQuery(`
     name,
     "slug": slug.current,
     "about": coalesce(about, []),
-    email,
-    phone,
     "patreonImage": photo${imageProjection}
   }
 `);

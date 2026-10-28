@@ -2,7 +2,6 @@ import Image from "next/image";
 import Button from "../custom/button";
 import { sanityFetch } from "@/lib/sanity/client";
 import { SPONSOR_LOGOS_QUERY } from "@/lib/sanity/queries";
-export const revalidate = 1200; // Revalidate every 20 minutes to ensure we have up-to-date sponsor information without excessive API calls
 
 interface SponsorImage {
   fileId: string;

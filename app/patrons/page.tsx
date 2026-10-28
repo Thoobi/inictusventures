@@ -7,7 +7,7 @@ import SupportUsSection from "@/components/patrons/supportUsSection";
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 
-export const revalidate = 60; // Revalidate every 20 minutes to ensure we have up-to-date patreon information without excessive API calls
+export const revalidate = 60; // Fallback; the Sanity webhook revalidates on publish
 
 async function fetchpatrons(): Promise<PatreonCardData[]> {
 	const patrons = (await sanityFetch<PatreonCardData[]>(PATRONS_QUERY)) ?? [];
