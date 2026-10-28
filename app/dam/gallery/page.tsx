@@ -2,100 +2,43 @@ import DamGallerySlider, {
   type DamGalleryImage,
   type DamGalleryYearGroup,
 } from "../../../components/dam/gallerySlider";
-import { apiClient } from "@/apiclient";
-import { DAM_COLLECTION_ID, BASE_URL } from "@/constant";
+import { sanityFetch } from "@/lib/sanity/client";
+import { DAM_EDITIONS_QUERY } from "@/lib/sanity/queries";
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 60;
 
-interface DamImage {
-  fileId?: string;
-  url?: string;
-  alt?: string | null;
+interface DamEdition {
+  _id: string;
+  year: string;
+  slug?: string;
+  images: { id: string; url?: string; fileId?: string; alt?: string | null }[] | null;
 }
 
-interface DamItem {
-  id: string;
-  fieldData?: {
-    name?: string;
-    slug?: string;
-    year?: DamImage[];
-    [key: string]: unknown;
-  };
-}
+async function fetchGalleryImages(): Promise<{ groups: DamGalleryYearGroup[] }> {
+  const editions = (await sanityFetch<DamEdition[]>(DAM_EDITIONS_QUERY)) ?? [];
 
-interface DamResponse {
-  items?: DamItem[];
-  data?: DamItem[];
-}
+  const groups = editions
+    .map((edition): DamGalleryYearGroup | null => {
+      const images: DamGalleryImage[] = (edition.images ?? [])
+        .filter((img) => Boolean(img.url))
+        .map((img) => ({
+          id: `${edition._id}-${img.id}`,
+          fileId: img.fileId,
+          url: img.url as string,
+          alt: img.alt,
+          title: edition.year,
+          year: edition.year,
+        }));
 
-interface DamGalleryResponse {
-  groups: DamGalleryYearGroup[];
-}
+      return images.length > 0
+        ? { year: edition.year, slug: edition.slug, images }
+        : null;
+    })
+    .filter((group): group is DamGalleryYearGroup => Boolean(group));
 
-async function fetchGalleryImages(): Promise<DamGalleryResponse> {
-  try {
-    if (!DAM_COLLECTION_ID) {
-      console.warn("DAM_COLLECTION_ID is not set");
-      return { groups: [] };
-    }
-
-    if (!BASE_URL) {
-      console.warn("BASE_URL is not set");
-      return { groups: [] };
-    }
-
-    const endpoint = `/collections/${DAM_COLLECTION_ID}/items`;
-    const response = await apiClient.get<DamResponse | DamItem[]>(endpoint);
-    // console.log("DAM API response:", response);
-
-    const itemsArray = Array.isArray(response)
-      ? response
-      : response?.items || response?.data || [];
-
-    if (!Array.isArray(itemsArray)) {
-      return { groups: [] };
-    }
-
-    const groups = itemsArray
-      .map((item): DamGalleryYearGroup | null => {
-        const yearImages = item.fieldData?.year;
-        const yearLabel =
-          item.fieldData?.name || item.fieldData?.slug || "Unknown Year";
-
-        if (!Array.isArray(yearImages) || yearImages.length === 0) {
-          return null;
-        }
-
-        const images: DamGalleryImage[] = yearImages
-          .filter((img): img is DamImage => Boolean(img?.url))
-          .map((img, index) => ({
-            id: `${item.id}-${img.fileId || index}`,
-            fileId: img.fileId,
-            url: img.url as string,
-            alt: img.alt,
-            title: yearLabel,
-            year: yearLabel,
-          }));
-
-        if (images.length === 0) {
-          return null;
-        }
-
-        return {
-          year: yearLabel,
-          slug: item.fieldData?.slug,
-          images,
-        };
-      })
-      .filter((group): group is DamGalleryYearGroup => Boolean(group));
-
-    return { groups };
-  } catch (error) {
-    console.error("Error fetching gallery images:", error);
-    return { groups: [] };
-  }
+  return { groups };
 }
 
 export const metadata: Metadata = pageMetadata({

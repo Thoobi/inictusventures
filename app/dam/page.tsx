@@ -3,7 +3,6 @@ import Hero from "@/components/dam/pages/hero";
 import Ticker from "@/components/dam/ticker";
 import Intro from "@/components/dam/pages/intro";
 import Pillars from "@/components/dam/pages/pillars";
-import Events from "@/components/dam//pages/events";
 import Manifesto from "@/components/dam/pages/manifestoe";
 import VinylStrip from "@/components/dam/pages/vinylStrip";
 // import Cursor from "@/components/dam/cursor";
@@ -26,7 +25,6 @@ export default function Home() {
       <Ticker />
       <Intro />
       <Pillars />
-      <Events />
       <Manifesto />
       <VinylStrip />
     </div>

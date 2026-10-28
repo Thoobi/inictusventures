@@ -1,5 +1,5 @@
-import { apiClient } from "@/apiclient";
-import { PATREON_COLLECTION_ID, BASE_URL } from "@/constant";
+import { sanityFetch } from "@/lib/sanity/client";
+import { PATRONS_QUERY } from "@/lib/sanity/queries";
 import PatronsGrid, {
 	type PatreonCardData,
 } from "@/components/patrons/patronsGrid";
@@ -9,114 +9,9 @@ import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 60; // Revalidate every 20 minutes to ensure we have up-to-date patreon information without excessive API calls
 
-interface PatreonImageField {
-	url?: string;
-	fileId?: string;
-	alt?: string;
-}
-
-interface PatreonItem {
-	id: string;
-	fieldData?: {
-		name?: string;
-		about?: string;
-		slug?: string;
-		email?: string;
-		phone?: string;
-		"e-mail"?: string;
-		"phone-number"?: string;
-		"patreon-image"?: PatreonImageField | PatreonImageField[];
-		[key: string]: unknown;
-	};
-}
-
-interface PatreonResponse {
-	items?: PatreonItem[];
-	data?: PatreonItem[];
-}
-
-function getStringField(
-	fieldData: PatreonItem["fieldData"],
-	keys: string[],
-): string | undefined {
-	if (!fieldData) {
-		return undefined;
-	}
-
-	for (const key of keys) {
-		const value = fieldData[key];
-		if (typeof value === "string" && value.trim()) {
-			return value.trim();
-		}
-	}
-
-	return undefined;
-}
-
 async function fetchpatrons(): Promise<PatreonCardData[]> {
-	try {
-		if (!PATREON_COLLECTION_ID) {
-			console.warn("PATREON_COLLECTION_ID is not set");
-			return [];
-		}
-
-		if (!BASE_URL) {
-			console.warn("BASE_URL is not set");
-			return [];
-		}
-
-		const endpoint = `/collections/${PATREON_COLLECTION_ID}/items`;
-		const response = await apiClient.get<PatreonResponse | PatreonItem[]>(
-			endpoint,
-		);
-
-		const allpatrons: PatreonCardData[] = [];
-
-		const itemsArray = Array.isArray(response)
-			? response
-			: response?.items || response?.data || [];
-
-		if (Array.isArray(itemsArray)) {
-			itemsArray.forEach((item) => {
-				if (!item.fieldData) {
-					return;
-				}
-
-				const imageField = item.fieldData["patreon-image"];
-				const image = Array.isArray(imageField)
-					? imageField[0]
-					: imageField;
-
-				if (!image?.url || !image?.fileId) {
-					return;
-				}
-
-				allpatrons.push({
-					name: item.fieldData.name || "",
-					about: item.fieldData.about || "",
-					slug: item.fieldData.slug || item.id,
-					email: getStringField(item.fieldData, [
-						"patreon-mail",
-						"e-mail",
-					]),
-					phone: getStringField(item.fieldData, [
-						"patreon-phone",
-						"phone-number",
-					]),
-					patreonImage: {
-						url: image.url,
-						fileId: image.fileId,
-						alt: image.alt,
-					},
-				});
-			});
-		}
-
-		return allpatrons;
-	} catch (error) {
-		console.error("Error fetching patrons:", error);
-		return [];
-	}
+	const patrons = (await sanityFetch<PatreonCardData[]>(PATRONS_QUERY)) ?? [];
+	return patrons.filter((patron) => Boolean(patron.patreonImage?.url));
 }
 
 export const metadata: Metadata = pageMetadata({

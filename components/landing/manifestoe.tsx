@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Button from "../custom/button";
-import { apiClient } from "@/apiclient";
-import { SPONSOR_LOGO_COLLECTION_ID, BASE_URL } from "@/constant";
+import { sanityFetch } from "@/lib/sanity/client";
+import { SPONSOR_LOGOS_QUERY } from "@/lib/sanity/queries";
 export const revalidate = 1200; // Revalidate every 20 minutes to ensure we have up-to-date sponsor information without excessive API calls
 
 interface SponsorImage {
@@ -10,57 +10,10 @@ interface SponsorImage {
   alt: string;
 }
 
-interface SponsorItem {
-  fieldData?: {
-    "logo-2"?: SponsorImage[];
-    [key: string]: unknown;
-  };
-}
-
-interface SponsorResponse {
-  items?: SponsorItem[];
-  data?: SponsorItem[];
-}
-
 export default async function Manifesteos() {
   async function fetchSponsorImages(): Promise<SponsorImage[]> {
-    try {
-      if (!SPONSOR_LOGO_COLLECTION_ID) {
-        console.warn("SPONSOR_LOGO_COLLECTION_ID is not set");
-        return [];
-      }
-
-      if (!BASE_URL) {
-        console.warn("BASE_URL is not set");
-        return [];
-      }
-
-      const endpoint = `/collections/${SPONSOR_LOGO_COLLECTION_ID}/items`;
-      const response = await apiClient.get<SponsorResponse | SponsorItem[]>(
-        endpoint,
-      );
-
-      // Extract fieldData from each item and get sponsor-images array
-      const allSponsorImages: SponsorImage[] = [];
-
-      // Handle if response is an object with an items/data property
-      const itemsArray = Array.isArray(response)
-        ? response
-        : response?.items || response?.data || [];
-
-      if (Array.isArray(itemsArray)) {
-        itemsArray.forEach((item) => {
-          if (item.fieldData && Array.isArray(item.fieldData["logo-2"])) {
-            allSponsorImages.push(...item.fieldData["logo-2"]);
-          }
-        });
-      }
-
-      return allSponsorImages;
-    } catch (error) {
-      console.error("Error fetching sponsor images:", error);
-      return [];
-    }
+    const logos = (await sanityFetch<SponsorImage[]>(SPONSOR_LOGOS_QUERY)) ?? [];
+    return logos.filter((logo) => Boolean(logo.url));
   }
 
   const images = await fetchSponsorImages();

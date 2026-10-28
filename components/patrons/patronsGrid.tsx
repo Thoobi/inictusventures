@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { PortableText, toPlainText, type PortableTextBlock } from "next-sanity";
 import Modal from "@/components/shared/modal";
 
 export interface PatreonCardData {
 	name: string;
-	about: string;
+	about: PortableTextBlock[];
 	slug: string;
 	email?: string;
 	phone?: string;
@@ -23,24 +24,11 @@ interface patronsGridProps {
 
 const PREVIEW_LENGTH = 220;
 
-function decodeEntities(text: string): string {
-	return text
-		.replace(/&nbsp;/g, " ")
-		.replace(/&#8205;/g, "")
-		.replace(/&quot;/g, '"')
-		.replace(/&#39;|&apos;/g, "'")
-		.replace(/&lt;/g, "<")
-		.replace(/&gt;/g, ">")
-		.replace(/&amp;/g, "&");
-}
-
-function getPatreonAboutPreview(html: string): {
+function getPatreonAboutPreview(about: PortableTextBlock[]): {
 	text: string;
 	isTruncated: boolean;
 } {
-	const text = decodeEntities(html.replace(/<[^>]+>/g, " "))
-		.replace(/\s+/g, " ")
-		.trim();
+	const text = toPlainText(about).replace(/\s+/g, " ").trim();
 
 	if (text.length <= PREVIEW_LENGTH) {
 		return { text, isTruncated: false };
@@ -52,10 +40,6 @@ function getPatreonAboutPreview(html: string): {
 		text: `${(lastSpace > 0 ? cut.slice(0, lastSpace) : cut).replace(/[\s.,;:!?-]+$/, "")}…`,
 		isTruncated: true,
 	};
-}
-
-function formatPatreonAboutModal(html: string): string {
-	return html.replace(/<p>(?:\s|&nbsp;| |&#8205;)*<\/p>/g, "").trim();
 }
 
 export default function PatronsGrid({ patrons }: patronsGridProps) {
@@ -72,9 +56,10 @@ export default function PatronsGrid({ patrons }: patronsGridProps) {
 					return (
 						<div
 							key={patreon.slug}
-							className="flex h-full min-w-0 flex-col gap-4 rounded-xl bg-red-800 p-3"
+							className="flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white"
 						>
-							<div className="relative aspect-4/3 w-full overflow-hidden rounded-lg bg-red-900">
+							{/* Patron photos are portraits; a square crop keeps faces in frame where 4:3 cut them. */}
+							<div className="relative aspect-square w-full overflow-hidden bg-gray-100">
 								<Image
 									src={patreon.patreonImage.url}
 									alt={patreon.patreonImage.alt || patreon.name}
@@ -83,23 +68,23 @@ export default function PatronsGrid({ patrons }: patronsGridProps) {
 									className="object-cover object-center transition-transform duration-300 ease-out hover:scale-105"
 								/>
 							</div>
-							<div className="flex w-full flex-col gap-2 px-1 pb-2">
-								<h2 className="text-white text-2xl max-md:text-xl font-mono font-bold">
+							<div className="flex w-full flex-1 flex-col gap-2 p-5 max-md:p-4">
+								<h2 className="text-black text-2xl max-md:text-xl font-mono font-bold">
 									{patreon.name}
 								</h2>
-								<p className="text-white text-sm max-md:text-xs leading-6 font-medium font-mono wrap-break-word">
+								<p className="text-gray-700 text-sm leading-6 font-mono wrap-break-word">
 									{preview.text}
-									{preview.isTruncated && (
-										<button
-											type="button"
-											onClick={() => setActivePatreon(patreon)}
-											aria-label={`Read more about ${patreon.name}`}
-											className="ml-1 cursor-pointer text-xs font-semibold text-white/80 underline underline-offset-2 hover:text-white font-mono transition-colors"
-										>
-											Read more
-										</button>
-									)}
 								</p>
+								{preview.isTruncated && (
+									<button
+										type="button"
+										onClick={() => setActivePatreon(patreon)}
+										aria-label={`Read more about ${patreon.name}`}
+										className="mt-auto self-start pt-2 cursor-pointer text-sm font-semibold text-red-700 underline underline-offset-2 hover:text-black font-mono transition-colors"
+									>
+										Read more
+									</button>
+								)}
 							</div>
 						</div>
 					);
@@ -120,12 +105,9 @@ export default function PatronsGrid({ patrons }: patronsGridProps) {
 						>
 							{activePatreon.name}
 						</h3>
-						<div
-							className="text-black text-base leading-7 font-mono [&_p]:mb-4 [&_strong]:font-bold"
-							dangerouslySetInnerHTML={{
-								__html: formatPatreonAboutModal(activePatreon.about),
-							}}
-						/>
+						<div className="text-black text-base leading-7 font-mono [&_p]:mb-4 [&_strong]:font-bold [&_a]:underline">
+							<PortableText value={activePatreon.about} />
+						</div>
 					</div>
 				)}
 			</Modal>

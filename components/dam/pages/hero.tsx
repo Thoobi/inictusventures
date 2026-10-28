@@ -1,6 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
+// The upcoming event leads the page, so its details live in the hero.
+const event = {
+	date: "NOV 21, 2026",
+	title: "Talent Show",
+	meta: "Gijasec School · 10:00 AM",
+};
+
 export default function Hero() {
 	return (
 		<section className="min-h-screen grid grid-cols-2 relative overflow-hidden max-md:grid-cols-1">
@@ -13,18 +20,37 @@ export default function Hero() {
 					Where Bodies, Visions &amp; Sound Collide
 				</p>
 
-				<h1
-					className="leading-[0.88] text-dam-cream"
+				<p
+					className="text-dam-red tracking-[0.2em] mb-2"
 					style={{
 						fontFamily: "Bebas Neue, sans-serif",
-						fontSize: "clamp(7rem, 14vw, 14rem)",
+						fontSize: "1.4rem",
+						animation: "fadeup 0.8s 0.3s ease both",
+					}}
+				>
+					{event.date}
+				</p>
+
+				<h1
+					className="leading-[0.95] text-dam-cream"
+					style={{
+						fontFamily: "Bebas Neue, sans-serif",
+						fontSize: "clamp(4rem, 8vw, 8rem)",
 						letterSpacing: "-0.02em",
 						animation: "fadeup 0.9s 0.35s ease both",
 					}}
 				>
 					D<span className="text-dam-red">A</span>M
-					<span className="sr-only"> — Dance, Art &amp; Music</span>
+					<span className="sr-only"> — Dance, Art &amp; Music —</span>{" "}
+					{event.title}
 				</h1>
+
+				<p
+					className="text-dam-cream/40 text-[0.8rem] tracking-[0.2em] uppercase mt-6"
+					style={{ animation: "fadeup 0.9s 0.45s ease both" }}
+				>
+					{event.meta}
+				</p>
 
 				{/* <p
 					className="text-dam-red text-[0.65rem] tracking-[0.2em] uppercase mb-6"
@@ -33,7 +59,7 @@ export default function Hero() {
 					Celebrating Creativity
 				</p> */}
 				<p
-					className="text-dam-gold mt-8"
+					className="text-dam-gold mt-4"
 					style={{
 						fontFamily: "DM Serif Display, serif",
 						fontStyle: "italic",
@@ -45,7 +71,7 @@ export default function Hero() {
 				</p>
 
 				<div
-					className="flex gap-6 max-md:gap-4 items-center mt-12"
+					className="flex gap-6 max-md:gap-4 items-center mt-10"
 					style={{ animation: "fadeup 0.9s 0.65s ease both" }}
 				>
 					{/* <Link

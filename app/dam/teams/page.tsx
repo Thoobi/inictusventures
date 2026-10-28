@@ -1,5 +1,5 @@
-import { apiClient } from "@/apiclient";
-import { BASE_URL, TEAMS_COLLECTION_ID } from "@/constant";
+import { sanityFetch } from "@/lib/sanity/client";
+import { TEAM_MEMBERS_QUERY } from "@/lib/sanity/queries";
 import TeamsImageGrid from "@/components/dam/teamsImageGrid";
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
@@ -13,108 +13,9 @@ interface TeamImage {
 	name?: string;
 }
 
-interface Team {
-	id: string;
-	fieldData?: Record<string, unknown>;
-}
-
-interface TeamsResponse {
-	items?: Team[];
-	data?: Team[];
-	pagination?: {
-		limit: number;
-		offset: number;
-		total: number;
-	};
-}
-
-function getStringField(
-	fieldData: Record<string, unknown> | undefined,
-	keys: string[],
-): string | undefined {
-	if (!fieldData) {
-		return undefined;
-	}
-
-	for (const key of keys) {
-		const value = fieldData[key];
-		if (typeof value === "string" && value.trim()) {
-			return value.trim();
-		}
-	}
-
-	return undefined;
-}
-
-function extractImage(fieldData?: Record<string, unknown>): TeamImage | null {
-	if (!fieldData) {
-		return null;
-	}
-
-	for (const value of Object.values(fieldData)) {
-		if (
-			typeof value !== "object" ||
-			value === null ||
-			Array.isArray(value)
-		) {
-			continue;
-		}
-
-		const maybeImage = value as TeamImage;
-		if (typeof maybeImage.url === "string" && maybeImage.url.length > 0) {
-			return maybeImage;
-		}
-	}
-
-	return null;
-}
-
-function mapTeamItem(fieldData?: Record<string, unknown>): TeamImage | null {
-	const image = extractImage(fieldData);
-
-	if (!image) {
-		return null;
-	}
-
-	return {
-		...image,
-		name:
-			getStringField(fieldData, ["fullname", "fullName", "full-name"]) ||
-			image.alt ||
-			undefined,
-	};
-}
-
 async function fetchTeams(): Promise<TeamImage[]> {
-	try {
-		if (!TEAMS_COLLECTION_ID) {
-			console.warn("TEAMS_COLLECTION_ID is not set");
-			return [];
-		}
-
-		if (!BASE_URL) {
-			console.warn("BASE_URL is not set");
-			return [];
-		}
-
-		const endpoint = `/collections/${TEAMS_COLLECTION_ID}/items`;
-		const response = await apiClient.get<TeamsResponse>(endpoint);
-
-		const itemsArray = Array.isArray(response)
-			? response
-			: response?.items || response?.data || [];
-
-		if (!Array.isArray(itemsArray)) {
-			return [];
-		}
-
-		return itemsArray
-			.map((team) => mapTeamItem(team.fieldData))
-			.filter((image): image is TeamImage => Boolean(image?.url));
-	} catch (error) {
-		console.error("Error fetching teams:", error);
-		return [];
-	}
+	const members = (await sanityFetch<TeamImage[]>(TEAM_MEMBERS_QUERY)) ?? [];
+	return members.filter((member) => Boolean(member.url));
 }
 
 export const metadata: Metadata = pageMetadata({

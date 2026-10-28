@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Image from "next/image";
-import { apiClient } from "@/apiclient";
-import { COLLECTION_ID, BASE_URL } from "@/constant";
+import { sanityFetch } from "@/lib/sanity/client";
+import { GALLERY_IMAGES_QUERY } from "@/lib/sanity/queries";
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 
@@ -9,51 +8,14 @@ export const revalidate = 60; // Revalidate every 20 minuted
 
 interface GalleryImage {
   id: string;
+  url: string;
+  fileId: string;
+  alt?: string;
   title?: string;
-  image?: {
-    url: string;
-    fileId: string;
-    alt?: string;
-  }[];
-  [key: string]: any;
 }
 
 async function fetchGalleryImages(): Promise<GalleryImage[]> {
-  try {
-    if (!COLLECTION_ID) {
-      console.warn("COLLECTION_ID is not set");
-      return [];
-    }
-
-    if (!BASE_URL) {
-      console.warn("BASE_URL is not set");
-      return [];
-    }
-
-    const endpoint = `/collections/${COLLECTION_ID}/items`;
-    const response = await apiClient.get<any>(endpoint);
-
-    // Extract fieldData from each item and get gallery-images array
-    const allGalleryImages: GalleryImage[] = [];
-
-    // Handle if response is an object with an items/data property
-    const itemsArray = Array.isArray(response)
-      ? response
-      : response?.items || response?.data || [];
-
-    if (Array.isArray(itemsArray)) {
-      itemsArray.forEach((item) => {
-        if (item.fieldData && Array.isArray(item.fieldData["gallery-images"])) {
-          allGalleryImages.push(...item.fieldData["gallery-images"]);
-        }
-      });
-    }
-
-    return allGalleryImages;
-  } catch (error) {
-    console.error("Error fetching gallery images:", error);
-    return [];
-  }
+  return (await sanityFetch<GalleryImage[]>(GALLERY_IMAGES_QUERY)) ?? [];
 }
 
 export const metadata: Metadata = pageMetadata({
