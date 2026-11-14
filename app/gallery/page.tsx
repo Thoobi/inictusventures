@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Reveal, SplitReveal } from "@/components/motion";
 import { sanityFetch } from "@/lib/sanity/client";
 import { GALLERY_IMAGES_QUERY } from "@/lib/sanity/queries";
 import type { Metadata } from "next";
@@ -32,12 +33,12 @@ export default async function Gallery() {
       <div className="max-w-7xl mx-auto">
         <div className="text-start mb-10 flex flex-col gap-1">
           <h1 className="text-5xl max-md:text-3xl font-bold font-mono">
-            Gallery
+            <SplitReveal text="Gallery" onMount />
           </h1>
-          <p className="text-base max-md:text-sm text-gray-700 font-mono">
+          <Reveal as="p" y={16} delay={0.2} className="text-base max-md:text-sm text-gray-700 font-mono">
             Explore the collection of artworks and creations from our talented
             artists.
-          </p>
+          </Reveal>
         </div>
 
         {/* Bento Grid */}
@@ -45,8 +46,10 @@ export default async function Gallery() {
           {images &&
             images.map((image, index) => {
               return (
-                <div
-                  key={image.id}
+                // Sanity returns some images twice, so the id alone isn't unique.
+                <Reveal
+                  key={`${image.id}-${index}`}
+                  delay={(index % 3) * 0.08}
                   className="group relative h-100 overflow-hidden bg-gray-200 rounded-lg"
                 >
                   <Image
@@ -57,10 +60,12 @@ export default async function Gallery() {
                       `Inistic Ventures gallery photo ${index + 1}`
                     }
                     fill
+                    // The first row is above the fold, so don't lazy-load it.
+                    loading={index < 3 ? "eager" : undefined}
                     sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                     className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
                   />
-                </div>
+                </Reveal>
               );
             })}
         </div>

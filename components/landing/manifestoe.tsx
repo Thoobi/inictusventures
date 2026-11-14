@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Button from "../custom/button";
+import { Reveal, SplitReveal, Stagger, StaggerItem } from "@/components/motion";
 import { sanityFetch } from "@/lib/sanity/client";
 import { SPONSOR_LOGOS_QUERY } from "@/lib/sanity/queries";
 
@@ -19,41 +20,42 @@ export default async function Manifesteos() {
 
   return (
     <div className="flex flex-col items-end py-20 max-md:py-10 max-md:w-full font-mono bg-linear">
-      <span className="text-sm max-md:text-xs font-bold tracking-[-0.02em] text-gray-600 mb-3 uppercase px-12 max-md:px-5">
+      <Reveal as="span" y={16} className="text-sm max-md:text-xs font-bold tracking-[-0.02em] text-gray-600 mb-3 uppercase px-12 max-md:px-5">
         [ Collaborations ]
-      </span>
+      </Reveal>
       <div className="xl:w-[50%] flex flex-col justify-start items-start px-12 max-md:px-5">
         <h2 className="text-8xl max-md:text-6xl text-right tracking-[-0.05em] font-bold text-red-700 mb-4">
-          WORK WITH US
+          <SplitReveal text="WORK WITH US" />
         </h2>
       </div>
       <div className="flex flex-col gap-10 max-md:gap-8 pb-20 pt-10 max-md:pt-5 max-md:pb-5 lg:px-10 px-5">
-        <div className="grid grid-cols-3 xl:grid-cols-5 gap-5 place-items-center">
+        <Stagger className="grid grid-cols-3 xl:grid-cols-5 gap-5 place-items-center" stagger={0.05}>
           {images.map((img, index) => (
+            <StaggerItem key={index}>
             <Image
-              key={index}
               src={img.url}
               alt={img.alt || `Partner logo ${index + 1}`}
               width={250}
               height={150}
-              className="h-auto xl:w-35 lg:w-25 w-20 object-contain"
+              className="h-auto xl:w-35 lg:w-25 w-20 object-contain transition-transform duration-300 hover:scale-110"
             />
+            </StaggerItem>
           ))}
-        </div>
-        <div className="text-2xl max-md:text-xl text-gray-500 font-medium px-5 max-md:px-0 tracking-[-0.01em]">
+        </Stagger>
+        <Reveal className="text-2xl max-md:text-xl text-gray-500 font-medium px-5 max-md:px-0 tracking-[-0.01em]">
           We don&apos;t collaborate with everyone. We partner with the
           relentless. Whether you&apos;re a brand looking for cultural
           relevance, an artist ready for the global stage, or an investor
           backing the next multimedia titan—Inistic is the engine. We provide
           the infrastructure; you provide the fire.
-        </div>
-        <div className="flex flex-col justify-center items-center">
+        </Reveal>
+        <Reveal delay={0.1} className="flex flex-col justify-center items-center">
           <Button
             title="Partner with us"
             href="/patrons"
             className="bg-linear-to-r from-red-700 to-black text-lg text-white font-bold py-4 max-md:py-3 max-md:px-5 px-8 rounded-lg hover:from-black hover:to-red-700 hover:scale-105 transition-all duration-300 ease-out max-md:text-sm"
           />
-        </div>
+        </Reveal>
       </div>
     </div>
   );

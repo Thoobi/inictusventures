@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { PortableText, toPlainText, type PortableTextBlock } from "next-sanity";
 import Modal from "@/components/shared/modal";
+import { Stagger, StaggerItem } from "@/components/motion";
 
 export interface PatreonCardData {
 	name: string;
@@ -47,13 +48,14 @@ export default function PatronsGrid({ patrons }: patronsGridProps) {
 
 	return (
 		<>
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-md:gap-5">
+			<Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-md:gap-5" stagger={0.1}>
 				{patrons.map((patreon) => {
 					const preview = getPatreonAboutPreview(patreon.about);
 
 					return (
-						<div
+						<StaggerItem
 							key={patreon.slug}
+							hoverLift
 							className="flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white"
 						>
 							{/* Patron photos are portraits; a square crop keeps faces in frame where 4:3 cut them. */}
@@ -84,10 +86,10 @@ export default function PatronsGrid({ patrons }: patronsGridProps) {
 									</button>
 								)}
 							</div>
-						</div>
+						</StaggerItem>
 					);
 				})}
-			</div>
+			</Stagger>
 
 			<Modal
 				open={activePatreon !== null}

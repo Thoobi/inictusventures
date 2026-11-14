@@ -3,6 +3,7 @@ import { Mona_Sans } from "next/font/google";
 import Footer from "@/components/shared/footer";
 import NavPathChecker from "@/components/shared/navPathChecker";
 import JsonLd from "@/components/shared/jsonLd";
+import { MotionProvider } from "@/components/motion";
 import {
 	CONTACT_EMAIL,
 	SITE_DESCRIPTION,
@@ -145,10 +146,12 @@ export default function RootLayout({
 					</ul>
 				</nav>
 
-				<main id="main-content" tabIndex={-1} className="outline-none">
-					{children}
-				</main>
-				<Footer />
+				<MotionProvider>
+					<main id="main-content" tabIndex={-1} className="outline-none">
+						{children}
+					</main>
+					<Footer />
+				</MotionProvider>
 			</body>
 		</html>
 	);

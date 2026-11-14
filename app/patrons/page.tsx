@@ -5,6 +5,7 @@ import PatronsGrid, {
 } from "@/components/patrons/patronsGrid";
 import SupportUsSection from "@/components/patrons/supportUsSection";
 import type { Metadata } from "next";
+import { Reveal, SplitReveal } from "@/components/motion";
 import { pageMetadata } from "@/lib/seo";
 
 export const revalidate = 60; // Fallback; the Sanity webhook revalidates on publish
@@ -27,13 +28,13 @@ export default async function patrons() {
 			<div className="max-w-7xl mx-auto w-full">
 				<div className="text-start mb-10 flex flex-col gap-1">
 					<h1 className="text-5xl max-md:text-3xl font-bold font-mono">
-						Patrons
+						<SplitReveal text="Patrons" onMount />
 					</h1>
-					<p className="text-base max-md:text-sm text-black font-mono max-w-2xl">
+					<Reveal as="p" y={16} delay={0.2} className="text-base max-md:text-sm text-black font-mono max-w-2xl">
 						We are grateful for the support of our patrons who make
 						our work possible. Their contributions help us continue
 						to create and innovate.
-					</p>
+					</Reveal>
 				</div>
 
 				<SupportUsSection />

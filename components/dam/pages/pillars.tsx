@@ -1,116 +1,93 @@
 import Image from "next/image";
+import { Reveal, SplitReveal, Stagger, StaggerItem } from "@/components/motion";
 
 const pillars = [
   {
     letter: "D",
     label: "Dance",
     tag: "The body as language",
-    accent: "pillar-dance",
     img: "/dam/01.jpg",
-    imgClass: "invert opacity-80",
-    desc: "From classical ballet to street movement, from contemporary performance to traditional ceremony — DAM celebrates every form of the human body in motion. We host open residencies, workshops, and showcase nights year-round.",
-    delay: "0s",
+    desc: "From street movement to traditional and contemporary styles, dancers take the DAM stage to show what they can do — and compete for cash prizes, gifts and awards.",
   },
   {
     letter: "A",
     label: "Art",
     tag: "Vision made tangible",
-    accent: "pillar-art",
     img: "/dam/05.png",
-    imgClass: "opacity-75",
-    desc: "Our gallery rotates every six weeks with works that challenge, provoke, and invite dialogue. Installations, photography, mixed media, and live art performances blur the line between art-making and art-watching.",
-    delay: "0.15s",
+    desc: "Arts and crafts are showcased alongside the performances, giving painters, illustrators and makers a stage to be seen and celebrated for their work.",
   },
   {
     letter: "M",
     label: "Music",
     tag: "Sound as architecture",
-    accent: "pillar-music",
     img: "/dam/04.png",
-    imgClass: "",
-    desc: "Live sets, vinyl listening sessions, experimental composition, and genre-defying concerts. DAM's music programme runs weekly — from intimate acoustic evenings to all-night, full-venue sonic experiences.",
-    delay: "0.3s",
+    desc: "Singers, rappers and instrumentalists bring their sound to the show. The best performances are rewarded — and every year the prizes get bigger.",
   },
 ];
 
 export default function Pillars() {
   return (
-    <section className="pb-32">
-      {/* Header */}
-      <div className="flex items-end max-md:items-start justify-between px-16 max-md:w-full max-md:px-5 pt-24 max-md:pt-10 pb-16 border-b border-dam-cream/[0.08] reveal max-md:flex-col max-md:gap-6">
-        <h2
-          className="text-dam-cream leading-none"
-          style={{
-            fontFamily: "Bebas Neue, sans-serif",
-            fontSize: "clamp(3rem, 7vw, 6rem)",
-          }}
-        >
-          Three
-          <br />
-          Disciplines.
-          <br />
-          One Stage.
-        </h2>
-        <p className="text-dam-cream/40 text-[0.72rem] tracking-wider leading-[1.7] max-w-[30ch] max-md:max-w-full">
-          Each pillar stands alone as a discipline. Together, they create
-          something entirely new — an art form without a name.
-        </p>
+    <section
+      aria-labelledby="dam-pillars-heading"
+      className="px-12 max-md:px-5 py-24 max-md:py-14 font-mono bg-[#fbfbfb]"
+    >
+      <div className="flex lg:flex-row flex-col lg:items-end justify-between gap-6 pb-14 max-md:pb-8">
+        <div className="flex flex-col gap-3">
+          <Reveal y={16}>
+            <span className="text-sm max-md:text-xs font-bold tracking-[-0.02em] uppercase text-gray-600">
+              [ The three pillars ]
+            </span>
+          </Reveal>
+          <h2
+            id="dam-pillars-heading"
+            className="text-8xl max-md:text-5xl tracking-[-0.05em] font-bold uppercase text-red-700"
+          >
+            <SplitReveal text="Three disciplines." className="block" />
+            <SplitReveal text="One stage." className="block text-black" delay={0.2} />
+          </h2>
+        </div>
+        <Reveal delay={0.2} className="max-w-sm">
+          <p className="text-lg max-md:text-base font-medium text-gray-800">
+            Each pillar stands alone as a discipline. Together, they create
+            something entirely new — an art form without a name.
+          </p>
+        </Reveal>
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-3 max-lg:grid-cols-1">
+      <Stagger as="ul" className="grid lg:grid-cols-3 gap-4" stagger={0.15}>
         {pillars.map((p) => (
-          <div
+          <StaggerItem
             key={p.letter}
-            className={`pillar-card ${p.accent} relative px-14 max-md:px-5 py-16 border-r border-dam-cream/[0.08] last:border-r-0 overflow-hidden reveal max-lg:border-r-0 max-lg:border-b`}
-            style={{ transitionDelay: p.delay }}
+            as="li"
+            hoverLift
+            className="group relative flex flex-col gap-5 rounded-[15px] max-md:rounded-lg bg-white border border-gray-200 px-8 max-md:px-5 py-10 max-md:py-8 overflow-hidden transition-colors duration-300 hover:bg-red-700 hover:border-red-700"
           >
-            {/* Ghost letter */}
             <span
               aria-hidden="true"
-              className="absolute top-4 right-6 text-dam-cream/[0.05] leading-none select-none pointer-events-none"
-              style={{ fontFamily: "Bebas Neue, sans-serif", fontSize: "6rem" }}
+              className="absolute -top-6 right-2 text-[180px] leading-none font-bold tracking-[-0.05em] text-gray-100 transition-colors duration-300 group-hover:text-white/10 select-none pointer-events-none"
             >
               {p.letter}
             </span>
 
-            <div className="w-20 h-20 mb-8 relative">
-              <Image
-                src={p.img}
-                alt=""
-                sizes="80px"
-                fill
-                className={`object-cover rounded ${p.imgClass}`}
-              />
+            <div className="relative size-20 rounded-lg overflow-hidden bg-gray-100">
+              <Image src={p.img} alt="" fill sizes="80px" className="object-cover" />
             </div>
 
-            <p
-              className="text-dam-cream leading-none mb-2"
-              style={{ fontFamily: "Bebas Neue, sans-serif", fontSize: "3rem" }}
-            >
-              {p.label}
-            </p>
+            <div className="relative flex flex-col gap-1">
+              <h3 className="text-5xl max-md:text-4xl font-bold uppercase tracking-[-0.05em] transition-colors duration-300 group-hover:text-white">
+                {p.label}
+              </h3>
+              <p className="text-sm font-bold uppercase tracking-[-0.02em] text-red-700 transition-colors duration-300 group-hover:text-white/80">
+                {p.tag}
+              </p>
+            </div>
 
-            <p
-              className="text-[0.6rem] tracking-[0.35em] uppercase mb-6"
-              style={{
-                color:
-                  p.accent === "pillar-dance"
-                    ? "#e05c2a"
-                    : p.accent === "pillar-art"
-                      ? "#4fb8c2"
-                      : "#d4a017",
-              }}
-            >
-              {p.tag}
-            </p>
-
-            <p className="text-dam-cream/50 text-[0.78rem] leading-[1.85]">
+            <p className="relative text-base max-md:text-sm font-medium text-gray-800 transition-colors duration-300 group-hover:text-white">
               {p.desc}
             </p>
-          </div>
+          </StaggerItem>
         ))}
-      </div>
+      </Stagger>
     </section>
   );
 }

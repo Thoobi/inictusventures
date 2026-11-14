@@ -16,6 +16,7 @@ const navbarLinks = [
   { name: "Home", href: "/" },
   { name: "Gallery", href: "/gallery" },
   { name: "Patrons", href: "/patrons" },
+  { name: "About", href: "/about" },
   { name: "D-A-M", href: "/dam" },
 ];
 

@@ -1,3 +1,5 @@
+import { Reveal, SplitReveal, Stagger, StaggerItem } from "@/components/motion";
+
 export default function Services() {
   const servicesData = [
     {
@@ -31,35 +33,61 @@ export default function Services() {
   ];
 
   return (
-    <div className="flex flex-col max-md:w-full items-center justify-center px-12 py-20 max-md:px-5 max-md:py-10 font-mono bg-linear">
-      <span className="text-sm max-md:text-xs text-gray-600 font-bold tracking-[-0.03em] uppercase">
-        [ WHAT WE DO ]
-      </span>
-      <div className=" xl:w-1/2 max-md:flex max-md:justify-center max-md:items-center flex flex-col justify-start items-start py-2">
-        <h2 className="text-8xl max-md:text-6xl text-center tracking-[-0.05em] font-bold text-red-700 mb-4">
-          OUR SERVICES
-        </h2>
-      </div>
-      <div className="grid xl:grid-cols-4 md:grid-cols-2 max-md:grid-cols-1 max-md:pt-5 max-md:pb-5 gap-4 pt-20 pb-10">
-        {servicesData.map((service) => {
-          return (
-            <div
-              key={service.id}
-              className="flex w-full flex-col group rounded-[15px] relative max-md:rounded-lg xl:justify-between gap-5 px-3 xl:min-h-110 md:min-h-140 min-h-100 xl:bg-gray-100 pt-8 max-md:pt-5 pb-5 text-left transition-all duration-300 xl:hover:bg-red-700 bg-red-700"
+    <section
+      aria-labelledby="services-heading"
+      className="px-12 max-md:px-5 py-28 max-md:py-16 font-mono bg-[#fbfbfb]"
+    >
+      <div className="max-w-7xl mx-auto flex flex-col gap-14 max-md:gap-8">
+        <div className="grid lg:grid-cols-[1.4fr_1fr] gap-8 lg:items-end">
+          <div className="flex flex-col gap-3">
+            <Reveal as="span" y={16} className="text-sm max-md:text-xs text-gray-600 font-bold tracking-[-0.02em] uppercase">
+              [ What we do ]
+            </Reveal>
+            <h2
+              id="services-heading"
+              className="text-8xl max-md:text-6xl tracking-[-0.05em] font-bold text-red-700 uppercase"
             >
-              <h3 className="md:text-3xl text-2xl tracking-[-0.03em] uppercase font-bold transition-all duration-300 md:group-hover:text-opacity-80 md:group-hover:text-white xl:text-black text-white">
-                {service.label}
-              </h3>
-              {/* Always visible below xl; revealed on hover from xl up */}
-              <p className="text-base max-md:text-sm font-medium text-white overflow-hidden transition-all duration-500 ease-in-out xl:max-h-0 xl:opacity-0 xl:text-black xl:group-hover:max-h-96 xl:group-hover:opacity-100 xl:group-hover:text-white">
-                {service.content}
-              </p>
+              <SplitReveal text="Our" className="block" />
+              <SplitReveal text="Services" className="block" delay={0.15} />
+            </h2>
+          </div>
+          <Reveal delay={0.2} className="text-lg max-md:text-base font-medium text-gray-700">
+            From discovering talent to putting it on screen and stage — four
+            disciplines, one creative house.
+          </Reveal>
+        </div>
 
-              {service.image && <div aria-hidden="true" className="absolute bottom-0 -right-2 group-hover:opacity-0 transition-all duration-200 ease-in-out">{service.image}</div>}
-            </div>
-          );
-        })}
+        <Stagger className="grid md:grid-cols-2 gap-4" stagger={0.12}>
+          {servicesData.map((service) => (
+            <StaggerItem
+              key={service.id}
+              hoverLift
+              className="group relative flex flex-col justify-between gap-12 max-md:gap-8 rounded-[15px] max-md:rounded-lg bg-white border border-gray-200 p-8 max-md:p-5 min-h-120 max-md:min-h-0 overflow-hidden transition-colors duration-300 hover:bg-red-700 hover:border-red-700"
+            >
+              <div className="flex items-start justify-between gap-6">
+                <span className="text-sm font-bold text-red-700 transition-colors duration-300 group-hover:text-white">
+                  {String(service.id).padStart(2, "0")}
+                </span>
+                {/* Line illustration takes the card's text colour */}
+                <div
+                  aria-hidden="true"
+                  className="w-36 max-md:w-24 -mr-2 -mt-2 text-red-700 transition-all duration-500 group-hover:text-white group-hover:-rotate-6 group-hover:scale-110 [&_svg]:size-full [&_svg]:h-auto [&_path]:stroke-current"
+                >
+                  {service.image}
+                </div>
+              </div>
+              <div className="flex flex-col gap-4">
+                <h3 className="text-4xl max-md:text-2xl tracking-[-0.04em] uppercase font-bold transition-colors duration-300 group-hover:text-white">
+                  {service.label}
+                </h3>
+                <p className="text-base max-md:text-sm font-medium text-gray-700 transition-colors duration-300 group-hover:text-white/90">
+                  {service.content}
+                </p>
+              </div>
+            </StaggerItem>
+          ))}
+        </Stagger>
       </div>
-    </div>
+    </section>
   );
 }
