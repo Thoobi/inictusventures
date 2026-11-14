@@ -1,6 +1,7 @@
 import Hero from "@/components/dam/pages/hero";
 import Ticker from "@/components/dam/ticker";
 import Intro from "@/components/dam/pages/intro";
+import Guests from "@/components/dam/pages/guests";
 import Pillars from "@/components/dam/pages/pillars";
 import Manifesto from "@/components/dam/pages/manifestoe";
 import VinylStrip from "@/components/dam/pages/vinylStrip";
@@ -20,6 +21,7 @@ export default function Home() {
 		<div className="bg-white overflow-x-clip">
 			<Hero />
 			<Ticker />
+			<Guests />
 			<Intro />
 			<Pillars />
 			<Manifesto />
