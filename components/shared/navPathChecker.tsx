@@ -4,7 +4,7 @@ import Navbar from "./navbar";
 import DamNavbar from "./dam_navbar";
 
 const isinisticPath = (pathname: string) => {
-  const inisticPaths = ["/gallery", "/patrons", "/"];
+  const inisticPaths = ["/gallery", "/patrons", "/about", "/"];
   return inisticPaths.includes(pathname);
 };
 
