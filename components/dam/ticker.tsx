@@ -15,20 +15,12 @@ export default function Ticker() {
   const repeated = [...items, ...items];
 
   return (
-    <div aria-hidden="true" className="bg-red-800 overflow-hidden py-3 whitespace-nowrap">
-      <div
-        className="inline-block animate-ticker"
-        style={{
-          fontFamily: "Bebas Neue, sans-serif",
-          fontSize: "1.1rem",
-          letterSpacing: "0.05em",
-          fontWeight: "semibold",
-        }}
-      >
+    <div aria-hidden="true" className="bg-red-700 overflow-hidden py-4 whitespace-nowrap font-mono -rotate-1 scale-[1.02]">
+      <div className="inline-block animate-ticker text-2xl max-md:text-lg font-bold tracking-[-0.03em]">
         {repeated.map((word, i) => (
           <span key={i} className="text-white">
             {word}
-            <span className="mx-8 text-white/30">✦</span>
+            <span className="mx-8 text-white/50">✦</span>
           </span>
         ))}
       </div>

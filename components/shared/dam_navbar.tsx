@@ -44,10 +44,10 @@ export default function DamNavbar() {
 
 	return (
 		<>
-			<nav aria-label="DAM" className="fixed top-0 bg-white border-b border-gray-100 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 md:px-12 md:py-3 md:mix-blend-difference">
+			<nav aria-label="DAM" className="font-mono fixed top-0 bg-white border-b border-gray-100 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 md:px-12 md:py-3 md:mix-blend-difference">
 				<Link
 					href="/dam"
-					className="font-bold text-2xl md:text-3xl font-mono tracking-widest text-dam-white"
+					className="font-bold text-2xl md:text-3xl font-mono tracking-widest text-black"
 				>
 					<Image
 						src="/icon.png"
@@ -68,7 +68,7 @@ export default function DamNavbar() {
 								className={`relative font-semibold text-[0.9rem] tracking-[-0.04em] uppercase no-underline transition-opacity ${
 									isActiveLink(link.href)
 										? "text-red-700"
-										: "text-dam-white hover:opacity-70"
+										: "text-black hover:opacity-70"
 								}`}
 							>
 								{link.label}
@@ -78,7 +78,7 @@ export default function DamNavbar() {
 					<li>
 						<Link
 							href="/"
-							className="text-[0.9rem] tracking-[-0.05em] font-semibold uppercase no-underline text-dam-white hover:opacity-70 transition-opacity"
+							className="text-[0.9rem] tracking-[-0.05em] font-semibold uppercase no-underline text-black hover:opacity-70 transition-opacity"
 						>
 							Back to Inistic
 						</Link>
@@ -90,7 +90,7 @@ export default function DamNavbar() {
 							className={`text-sm py-2 px-3 bg-gray-900 text-white tracking-[0.03em] font-semibold uppercase no-underline transition-opacity cursor-pointer ${
 								isActiveLink("/dam/registration")
 									? "text-dam-red"
-									: "text-dam-white hover:opacity-70"
+									: "text-black hover:opacity-70"
 							}`}
 						>
 							Register
@@ -128,7 +128,7 @@ export default function DamNavbar() {
 			/>
 
 			<aside
-				className={`md:hidden fixed top-0 left-0 z-50 h-screen w-72 max-w-[86vw] bg-white border-r border-r-gray-300 px-6 pt-20 pb-8 flex flex-col gap-6 transition-transform duration-300 ease-out ${
+				className={`md:hidden font-mono fixed top-0 left-0 z-50 h-screen w-72 max-w-[86vw] bg-white border-r border-r-gray-300 px-6 pt-20 pb-8 flex flex-col gap-6 transition-transform duration-300 ease-out ${
 					isMenuOpen ? "translate-x-0" : "-translate-x-full"
 				}`}
 				id="dam-mobile-menu"
