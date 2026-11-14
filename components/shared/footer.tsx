@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SplitReveal } from "@/components/motion";
 
 export default function Footer() {
   const navlinks = [
@@ -102,7 +103,7 @@ export default function Footer() {
       </div>
       <div aria-hidden="true" className="relative bottom-0 h-30 sm:h-32 md:h-44 lg:h-56 xl:h-90 overflow-hidden w-full flex justify-center">
         <p className="absolute whitespace-nowrap text-[110px]/[120px] sm:text-[140px]/[150px] md:text-[210px]/[220px] lg:text-[300px]/[320px] xl:text-[400px]/[420px] tracking-[-0.05em] text-center font-semibold">
-          INISTIC
+          <SplitReveal text="INISTIC" by="char" stagger={0.06} />
         </p>
       </div>
     </footer>
