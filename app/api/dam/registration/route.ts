@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { getSql } from "@/lib/db";
 import { damRegistrationEmail } from "@/lib/emails/damRegistrationEmail";
+import { DAM_REGISTRATION_OPEN } from "@/lib/dam";
 
 interface RegistrationRequestBody {
 	fullName?: unknown;
@@ -24,6 +25,10 @@ function clean(value: unknown, maxLength = 500): string {
 }
 
 export async function POST(request: Request) {
+	if (!DAM_REGISTRATION_OPEN) {
+		return NextResponse.json({ error: "Registration is closed." }, { status: 403 });
+	}
+
 	let body: RegistrationRequestBody;
 	try {
 		body = await request.json();

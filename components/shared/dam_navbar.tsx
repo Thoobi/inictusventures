@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { DAM_REGISTRATION_OPEN } from "@/lib/dam";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -169,6 +170,7 @@ export default function DamNavbar() {
 							</Link>
 						</li>
 					))}
+{DAM_REGISTRATION_OPEN && (
 					<li>
 						<Link
 							href="/dam/registration"
@@ -182,6 +184,7 @@ export default function DamNavbar() {
 							Register
 						</Link>
 					</li>
+					)}
 				</ul>
 
 				<div className="mt-auto pt-4 border-t border-gray-200">

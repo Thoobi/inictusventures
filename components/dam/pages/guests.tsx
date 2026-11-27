@@ -37,10 +37,10 @@ export default function Guests() {
 		<section aria-labelledby="dam-guests-heading" className="px-12 max-md:px-5 py-24 max-md:py-14 font-mono bg-white">
 			<div className="flex flex-col gap-3 pb-12 max-md:pb-8">
 				<Reveal as="span" y={16} className="text-sm max-md:text-xs font-bold tracking-[-0.02em] uppercase text-red-700">
-					[ On the day ]
+					[ Talent Show · Nov 21, 2026 ]
 				</Reveal>
 				<h2 id="dam-guests-heading" className="text-8xl max-md:text-5xl tracking-[-0.05em] font-bold uppercase">
-					<SplitReveal text="Our" className="block" />
+					<SplitReveal text="Thanks to our" className="block" />
 					<SplitReveal text="Guests." className="block text-red-700" delay={0.15} />
 				</h2>
 			</div>

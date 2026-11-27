@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Button from "@/components/custom/button";
+import { DAM_REGISTRATION_OPEN } from "@/lib/dam";
 import JsonLd from "@/components/shared/jsonLd";
 import { CountUp, ImageReveal, Reveal, SplitReveal, Stagger, StaggerItem } from "@/components/motion";
 import { pageMetadata, SITE_URL } from "@/lib/seo";
@@ -470,11 +471,13 @@ export default function About() {
 							href="/dam"
 							className="bg-linear-to-r from-red-700 to-black text-lg text-white font-bold py-4 px-8 max-md:py-3 max-md:px-5 max-md:text-sm rounded-lg hover:from-black hover:to-red-700 hover:scale-105 transition-all duration-300 ease-out"
 						/>
-						<Button
-							title="Register for DAM"
-							href="/dam/registration"
-							className="border-2 border-black text-lg font-bold py-4 px-8 max-md:py-3 max-md:px-5 max-md:text-sm rounded-lg hover:bg-black hover:text-white transition-all duration-300 ease-out"
-						/>
+						{DAM_REGISTRATION_OPEN && (
+							<Button
+								title="Register for DAM"
+								href="/dam/registration"
+								className="border-2 border-black text-lg font-bold py-4 px-8 max-md:py-3 max-md:px-5 max-md:text-sm rounded-lg hover:bg-black hover:text-white transition-all duration-300 ease-out"
+							/>
+						)}
 					</Reveal>
 				</div>
 			</section>
