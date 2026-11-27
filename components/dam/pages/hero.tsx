@@ -2,14 +2,7 @@ import Image from "next/image";
 import Button from "@/components/custom/button";
 import { Float, Reveal, SplitReveal } from "@/components/motion";
 import Vinyl from "@/components/dam/vinyl";
-
-// The upcoming event leads the page, so its details live in the hero.
-const event = {
-	date: "NOV 21, 2026",
-	title: "Talent Show",
-	venue: "Gijasec School",
-	time: "10:00 AM",
-};
+import { DAM_EVENT as event, DAM_REGISTRATION_OPEN } from "@/lib/dam";
 
 export default function Hero() {
 	return (
@@ -24,10 +17,12 @@ export default function Hero() {
 				<Reveal y={16} delay={0.1}>
 					<p className="inline-flex items-center gap-3 text-lg max-md:text-base font-bold tracking-[-0.02em] text-red-700">
 						<span aria-hidden="true" className="relative flex size-2.5">
-							<span className="absolute inline-flex size-full rounded-full bg-red-700 opacity-60 animate-ping" />
+							{event.upcoming && (
+								<span className="absolute inline-flex size-full rounded-full bg-red-700 opacity-60 animate-ping" />
+							)}
 							<span className="relative inline-flex size-2.5 rounded-full bg-red-700" />
 						</span>
-						Next up · {event.date}
+						{event.upcoming ? `Next up · ${event.date}` : `That's a wrap · ${event.date}`}
 					</p>
 				</Reveal>
 
@@ -41,7 +36,7 @@ export default function Hero() {
 					<dl className="flex flex-wrap gap-x-10 gap-y-3 border-t border-gray-300 pt-5 max-w-xl">
 						{[
 							{ label: "Venue", value: event.venue },
-							{ label: "Time", value: event.time },
+							...(event.upcoming ? [{ label: "Time", value: event.time }] : []),
 							{ label: "Disciplines", value: "Dance · Art · Music" },
 						].map((item) => (
 							<div key={item.label} className="flex flex-col-reverse gap-1">
@@ -54,8 +49,8 @@ export default function Hero() {
 
 				<Reveal y={20} delay={0.75} className="flex flex-wrap gap-4 pt-2">
 					<Button
-						title="Register now"
-						href="/dam/registration"
+						title={DAM_REGISTRATION_OPEN ? "Register now" : "See the gallery"}
+						href={DAM_REGISTRATION_OPEN ? "/dam/registration" : "/dam/gallery"}
 						className="bg-linear-to-r from-red-700 to-black text-lg text-white font-bold py-4 px-8 max-md:py-3 max-md:px-5 max-md:text-sm rounded-lg hover:from-black hover:to-red-700 hover:scale-105 transition-all duration-300 ease-out"
 					/>
 					<Button
