@@ -16,7 +16,9 @@ interface GalleryImage {
 }
 
 async function fetchGalleryImages(): Promise<GalleryImage[]> {
-  return (await sanityFetch<GalleryImage[]>(GALLERY_IMAGES_QUERY)) ?? [];
+  const images = (await sanityFetch<(GalleryImage | null)[]>(GALLERY_IMAGES_QUERY)) ?? [];
+  // A new album or an image still uploading in the Studio has no asset yet; skip it.
+  return images.filter((image): image is GalleryImage => Boolean(image?.url));
 }
 
 export const metadata: Metadata = pageMetadata({

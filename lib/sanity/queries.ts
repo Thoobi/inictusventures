@@ -9,7 +9,7 @@ const imageProjection = /* groq */ `{
 }`;
 
 export const GALLERY_IMAGES_QUERY = defineQuery(`
-  *[_type == "galleryAlbum"] | order(_createdAt asc).images[]{
+  *[_type == "galleryAlbum" && defined(images)] | order(_createdAt asc).images[defined(asset)]{
     "id": _key,
     ...${imageProjection}
   }
